@@ -19,7 +19,16 @@ ln -s ~/dev/my-ai-stack/personas ./.agents/personas
 3. Copy the `CONTEXT.template.md` to your project root, rename it to `CONTEXT.md`, and fill in your project's specific business logic and domain model.
 4. Update your project's local rules file (e.g., `.windsurf/rules.md` or `.cursorrules`) to include this instruction:
    `Always adhere to the global engineering standards defined in the symlinked AI stack, and read CONTEXT.md before proceeding.`
-5. Read `OBSIDIAN-INTEGRATION.md` to set up persistent memory for the project.
+5. Configure persistent memory — Engram MCP + Obsidian (see `PERSISTENT-MEMORY.md` for full guide).
+
+This stack combines two memory systems:
+- **Engram MCP**: Automatic, session-persistent memory. AI retrieves context automatically.
+- **Obsidian**: Structured documentation (ADRs, bug logs) via symlinks.
+
+Use `/mems` to save observations, `/sum` to close sessions — both write to both systems.
+
+> [!IMPORTANT]
+> Auto-triggered saves (AI calling `mem_save` automatically) only write to Engram, not Obsidian. Always run `/sum` at the end of each work session to ensure complete documentation in both systems.
 
 ## Available Skills
 
@@ -49,7 +58,7 @@ Skills are modular instructions that the AI can execute to solve specific proble
 ### Productivity and Personal
 - **caveman**: Ultra-compressed communication mode. Cuts token usage by dropping pleasantries.
 - **grill-me**: Interview the user relentlessly about a plan until reaching shared understanding.
-- **obsidian-vault**: Search, create, and manage notes in the local Obsidian vault.
+- **mems**: Save, search, and retrieve persistent memory across sessions with Engram.
 
 ## Available Personas
 
