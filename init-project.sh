@@ -7,6 +7,7 @@ PROJECT_NAME="$(basename "$TARGET_DIR")"
 
 echo "Initializing AI Stack for project: $PROJECT_NAME at $TARGET_DIR"
 
+mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR" || { echo "Failed to cd to $TARGET_DIR"; exit 1; }
 
 # 1. Setup dot directories and symlinks
