@@ -6,3 +6,7 @@
 .windsurf/
 docs/brain/
 docs/brain
+
+# macOS
+.DS_Store
+**/.DS_Store
