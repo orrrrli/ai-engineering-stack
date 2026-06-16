@@ -144,7 +144,30 @@ if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
 fi
 
 
-# 7. Setup CLAUDE.md
+# 7. Setup Claude Code settings.json (SessionStart hook to auto-load CONTEXT.md)
+if [ ! -f ".claude/settings.json" ]; then
+    cat > ".claude/settings.json" <<'EOF'
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .agents/CONTEXT.md ]; then echo '## Project Context (.agents/CONTEXT.md)'; echo ''; cat .agents/CONTEXT.md; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+    echo "✅ Created .claude/settings.json with SessionStart hook"
+else
+    echo "⚠️ .claude/settings.json already exists, skipping."
+fi
+
+# 8. Setup CLAUDE.md
 if [ ! -f ".claude/CLAUDE.md" ]; then
     cat > ".claude/CLAUDE.md" <<EOF
 # CLAUDE.md
