@@ -98,6 +98,8 @@ GITIGNORE_ENTRIES=(
     ".windsurf/"
     "docs/brain/"
     "docs/brain"
+    "opencode.json"
+    "GEMINI.md"
 )
 
 if [ ! -f ".gitignore" ]; then
@@ -167,7 +169,30 @@ else
     echo "⚠️ .claude/settings.json already exists, skipping."
 fi
 
-# 8. Setup CLAUDE.md
+# 8. Setup opencode.json (auto-loads CONTEXT.md via instructions field)
+if [ ! -f "opencode.json" ]; then
+    cat > "opencode.json" <<'EOF'
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [".agents/CONTEXT.md"]
+}
+EOF
+    echo "✅ Created opencode.json with instructions"
+else
+    echo "⚠️ opencode.json already exists, skipping."
+fi
+
+# 9. Setup GEMINI.md (auto-loaded by Gemini CLI, imports CONTEXT.md)
+if [ ! -f "GEMINI.md" ]; then
+    cat > "GEMINI.md" <<'EOF'
+@.agents/CONTEXT.md
+EOF
+    echo "✅ Created GEMINI.md"
+else
+    echo "⚠️ GEMINI.md already exists, skipping."
+fi
+
+# 10. Setup CLAUDE.md
 if [ ! -f ".claude/CLAUDE.md" ]; then
     cat > ".claude/CLAUDE.md" <<EOF
 # CLAUDE.md
