@@ -39,12 +39,16 @@ for agent_dir in .agents .claude .opencode .windsurf; do
     echo "✅ Setup symlinks in $agent_dir"
 done
 
-# 2. Setup CONTEXT.md in .agents
+# 2. Setup CONTEXT.md stub in .agents
 if [ ! -f ".agents/CONTEXT.md" ]; then
-    cp "$STACK_DIR/CONTEXT.template.md" ".agents/CONTEXT.md"
-    # Mac OS requires an empty string for the backup extension in sed -i
-    sed -i '' "s/\[Project Name\]/$PROJECT_NAME/g" ".agents/CONTEXT.md"
-    echo "✅ Created .agents/CONTEXT.md"
+    cat > ".agents/CONTEXT.md" <<EOF
+# $PROJECT_NAME - Local Context
+
+> **CONTEXT NOT YET GENERATED.**
+> Run \`/fill-context\` in Claude Code to generate this file automatically.
+> The AI will scan the codebase and ask 3 targeted questions to complete it.
+EOF
+    echo "✅ Created .agents/CONTEXT.md stub"
 else
     echo "⚠️ .agents/CONTEXT.md already exists, skipping."
 fi
@@ -162,4 +166,9 @@ EOF
     echo "✅ Created .claude/CLAUDE.md"
 fi
 
+echo ""
 echo "🎉 Initialization complete for $PROJECT_NAME!"
+echo ""
+echo "👉 Next step: open Claude Code in this project and run:"
+echo "   /fill-context"
+echo "   The AI will scan the codebase and ask 3 questions to generate your CONTEXT.md."
