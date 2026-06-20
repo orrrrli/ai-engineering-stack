@@ -1,0 +1,101 @@
+{
+  "repo": "acme/widget",
+  "owner": "acme",
+  "owner_type": "user",
+  "project_number": 7,
+  "assignee": "acme",
+  "project_title": "Widget Backlog",
+  "screens": ["ON-1", "ON-2", "HM-1"],
+  "epics": [
+    {
+      "id": "EPIC-FOUND",
+      "title": "Foundations & Infrastructure",
+      "fr": "Phase 0",
+      "phase": 0,
+      "size": "L",
+      "sprint": 1,
+      "summary": "Stand up the data layer and app shell so feature work can begin.",
+      "stories": [
+        {
+          "id": "BE-FOUND-1",
+          "area": "backend",
+          "estimate": "M",
+          "title": "As the team, I want a versioned schema + migrations so every feature has a correct data layer.",
+          "acceptance_criteria": [
+            "Given migrations run on a clean DB, When applied, Then all tables and indexes exist."
+          ],
+          "screens": [],
+          "depends_on": [],
+          "tasks": [
+            "Create project + environments",
+            "Define schema migration",
+            "CI: run migrations + generate types"
+          ]
+        },
+        {
+          "id": "OPS-FOUND-1",
+          "area": "devops",
+          "estimate": "L",
+          "title": "As the team, I want CI/CD + environments so builds are reproducible.",
+          "acceptance_criteria": [
+            "Given a push to main, When the pipeline runs, Then it lints, tests, and builds."
+          ],
+          "screens": [],
+          "depends_on": ["BE-FOUND-1"],
+          "tasks": ["GitHub Actions pipeline", "dev/prod environments + config"]
+        }
+      ]
+    },
+    {
+      "id": "EPIC-AUTH",
+      "title": "Authentication",
+      "fr": "FR-1",
+      "phase": 0,
+      "size": "M",
+      "sprint": 2,
+      "summary": "Provider sign-in and profile bootstrap.",
+      "stories": [
+        {
+          "id": "BE-AUTH-1",
+          "area": "backend",
+          "estimate": "M",
+          "title": "As the system, I want providers wired so any sign-in creates a profile.",
+          "acceptance_criteria": ["Given a new user, When auth succeeds, Then a profile row exists."],
+          "screens": [],
+          "depends_on": ["BE-FOUND-1"],
+          "tasks": ["Configure OAuth providers", "handle_new_user trigger"]
+        },
+        {
+          "id": "FE-AUTH-1",
+          "area": "frontend",
+          "estimate": "M",
+          "title": "As a new user, I want clean auth screens so I can sign in fast.",
+          "acceptance_criteria": ["Given a valid session, When the app loads, Then it routes home."],
+          "screens": ["ON-1", "ON-2"],
+          "depends_on": [],
+          "tasks": ["Splash ON-1", "Auth ON-2"]
+        },
+        {
+          "id": "UX-AUTH-1",
+          "area": "design",
+          "estimate": "S",
+          "title": "As a new user, I want clear auth screens designed so sign-in feels trustworthy.",
+          "acceptance_criteria": ["Given the auth flow, When designed, Then ON-1/ON-2 are speced with states."],
+          "screens": ["ON-1", "ON-2", "HM-1"],
+          "depends_on": [],
+          "tasks": ["Splash + welcome ON-1", "Auth ON-2", "Home HM-1"]
+        },
+        {
+          "id": "SEC-AUTH-1",
+          "area": "security",
+          "estimate": "S",
+          "title": "As the security owner, I want auth hardened so tokens can't be abused.",
+          "acceptance_criteria": ["Given the auth endpoints, When hit repeatedly, Then rate limiting blocks abuse."],
+          "screens": [],
+          "depends_on": ["BE-AUTH-1"],
+          "tasks": ["Token/session handling review", "Rate-limit auth endpoints"]
+        }
+      ]
+    }
+  ]
+}
