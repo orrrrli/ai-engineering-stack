@@ -133,6 +133,8 @@ Using Phase 1 data + Phase 2 answers, generate every file. Show file content to 
 ## Engineering
 - [Standards](engineering/standards.md) — Coding conventions and patterns
 - [Testing](engineering/testing.md) — Test strategy and commands
+[If .claude/engineering/agent-triggers.md exists, add this line too:]
+- [Agent Triggers](engineering/agent-triggers.md) — when to delegate to a specialized subagent
 ```
 
 ---

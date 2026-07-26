@@ -382,15 +382,23 @@ def main():
         meta = fetch_project_meta(proj_owner, owner_type, number, max_sprint)
         print(f"project={meta['project_id']} backlog={meta['backlog_id']}")
 
-    print("Ensuring labels...")
-    ensure_labels(repo, m, args.dry_run)
+    # Collect all repos used (global + per-story overrides)
+    all_repos = {repo}
+    for e in m["epics"]:
+        for s in e["stories"]:
+            if s.get("repo"):
+                all_repos.add(s["repo"])
+    print(f"Ensuring labels on {len(all_repos)} repo(s): {', '.join(sorted(all_repos))}")
+    for r in sorted(all_repos):
+        ensure_labels(r, m, args.dry_run)
     created_this_run = [0]
 
     def save():
         with open(state_path, "w") as f:
             json.dump(state, f, indent=2)
 
-    def ensure_issue(key, title, body, labels):
+    def ensure_issue(key, title, body, labels, issue_repo=None):
+        r = issue_repo or repo
         rec = state.get(key)
         if rec and rec.get("number"):
             return rec
@@ -399,9 +407,10 @@ def main():
             rec = {"number": 0, "id": 0, "node_id": "DRY", "title": title}
         else:
             print(f"  + {key}", flush=True)
-            rec = create_issue(repo, owner, title, body, labels)
+            rec = create_issue(r, owner, title, body, labels)
             rec["title"] = title
             created_this_run[0] += 1
+        rec["repo"] = r
         for k in ("linked", "status_set", "sprint_set", "size_set", "estimate_set"):
             rec.setdefault(k, False)
         rec.setdefault("item_id", None)
@@ -412,10 +421,18 @@ def main():
             raise LimitReached()
         return rec
 
-    def ensure_link(key, parent_number, child):
+    def ensure_link(key, parent_number, child, parent_key=None):
         if args.dry_run or state[key].get("linked"):
             return
-        link_sub_issue(repo, parent_number, child["id"])
+        child_repo = state[key].get("repo", repo)
+        parent_repo = state[parent_key].get("repo", repo) if parent_key else repo
+        if child_repo != parent_repo:
+            print(f"  ~ skip cross-repo link: {key} (repo={child_repo} != {parent_repo})",
+                  flush=True)
+            state[key]["linked"] = True
+            save()
+            return
+        link_sub_issue(child_repo, parent_number, child["id"])
         state[key]["linked"] = True
         save()
 
@@ -451,16 +468,18 @@ def main():
                            for s in e["stories"])
             ensure_fields(e["id"], erec, e.get("sprint"), e.get("size"), epic_pts or None)
             for s in e["stories"]:
+                s_repo = s.get("repo") or repo
                 srec = ensure_issue(s["id"], f"{s['id']}: {s['title']}",
-                                    story_body(e, s), labels_for("story", e, s["area"]))
-                ensure_link(s["id"], erec["number"], srec)
+                                    story_body(e, s), labels_for("story", e, s["area"]), s_repo)
+                ensure_link(s["id"], erec["number"], srec, e["id"])
                 pts = s.get("points", POINTS.get(s.get("estimate", "")))
                 ensure_fields(s["id"], srec, s.get("sprint") or e.get("sprint"),
                               s.get("estimate"), pts)
                 for t in s["tasks"]:
+                    t_repo = t.get("repo") or s_repo
                     trec = ensure_issue(t["id"], f"{t['id']}: {t['title']}",
-                                        task_body(e, s, t), labels_for("task", e, t["area"]))
-                    ensure_link(t["id"], srec["number"], trec)
+                                        task_body(e, s, t), labels_for("task", e, t["area"]), t_repo)
+                    ensure_link(t["id"], srec["number"], trec, s["id"])
                     ensure_fields(t["id"], trec, t.get("sprint") or e.get("sprint"))
     except LimitReached:
         print(f"--limit reached ({args.limit} new this run); stopping (resumable).")

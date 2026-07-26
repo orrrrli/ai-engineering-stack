@@ -43,6 +43,9 @@ derived docs or GitHub — change the manifest and re-run.
 {
   "id": "BE-AUTH-1",          // required, unique. Convention: <AREA>-<EPIC>-<n>
   "area": "backend",          // backend|frontend|design|qa|security|devops|data|mobile
+  "repo": "owner/name",       // optional — override global repo for this story and its tasks.
+                              // Use when backend/frontend stories live in separate repositories.
+                              // Cross-repo sub-issue linking is skipped (GitHub doesn't support it).
   "estimate": "M",            // XS|S|M|L|XL (mapped to points S=2,M=3,L=5,XS=1,XL=8)
   "title": "As a user, I want ... so that ...",   // user-story sentence
   "acceptance_criteria": ["Given ..., When ..., Then ..."],
@@ -53,7 +56,7 @@ derived docs or GitHub — change the manifest and re-run.
 ```
 
 Tasks are plain strings; `create_issues.py`/`render_docs.py` auto-assign task
-ids `<story-id>-T<k>` and inherit the story's area + the epic's sprint.
+ids `<story-id>-T<k>` and inherit the story's area + repo + the epic's sprint.
 
 ## Conventions that make a good backlog
 
