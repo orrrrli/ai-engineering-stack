@@ -1,6 +1,6 @@
 # Persistent Memory Guide
 
-This stack uses a dual memory system that combines **Engram MCP** for automatic session-persistent memory with **Obsidian** for structured documentation. Together, they provide comprehensive context retention across sessions.
+This stack uses two memory layers: **claude-mem** captures what happens on its own, and **Obsidian** holds what you deliberately write down. Between them, context survives across sessions.
 
 ---
 
@@ -8,20 +8,22 @@ This stack uses a dual memory system that combines **Engram MCP** for automatic 
 
 | Layer | System | Purpose | Trigger |
 |-------|--------|---------|---------|
-| **Automatic** | Engram MCP | Remembers *"what we did last time"*, decisions, patterns | AI calls automatically via MCP |
+| **Automatic** | claude-mem | Remembers *"what we did last time"*, decisions, patterns | Hooks, with no action from you |
 | **Deliberate** | Obsidian | ADRs, bug logs, domain knowledge | Human creates via `/mems` or `/sum` |
 
-**The flow**: When you use `/mems` or `/sum`, the AI writes to **both** systems simultaneously — Engram for automatic retrieval, Obsidian for structured reference.
+**The flow**: claude-mem records on its own in the background. `/mems` and `/sum` write to Obsidian, which is the deliberate half — the notes you will actually reread.
 
 ---
 
 ## How They Complement Each Other
 
-### Engram MCP
-- **Automatic**: No manual setup needed after initial configuration
-- **Semantic search**: AI retrieves relevant context based on meaning, not just keywords
-- **Session-aware**: Remembers what was discussed in previous sessions
-- **Fast**: Direct MCP integration, no file I/O
+### claude-mem
+- **Automatic**: observes the session through hooks — nothing to call, nothing to remember to do
+- **Injected at startup**: prior work arrives as context when a session opens
+- **Searchable**: earlier sessions can be queried by meaning, not just keywords
+- **Not documented here**: it is a Claude Code plugin with its own docs. Run the
+  `claude-mem:how-it-works` skill for how it captures and where it stores things.
+  Duplicating that here would just rot.
 
 ### Obsidian
 - **Structured**: Notes organized in `ADR/`, `Bugs/`, `Learnings/`, etc.
@@ -29,37 +31,18 @@ This stack uses a dual memory system that combines **Engram MCP** for automatic 
 - **Rich linking**: Wikilinks between notes, graphs, bidirectional references
 - **Archival**: Long-term storage of architectural decisions
 
-**Use both**: Engram captures context organically, Obsidian holds deliberate architectural documentation.
+**Use both**: claude-mem catches what you would not have bothered to write down. Obsidian holds what deserves to be written down.
 
 ---
 
 ## Configuration
 
-### 1. Engram MCP Setup
+### 1. claude-mem
 
-**Download:**
-```bash
-# macOS
-brew install engram-cli
+Installed as a Claude Code plugin; it needs no configuration here. See the
+`claude-mem:how-it-works` skill.
 
-# Or download from https://github.com/getengram/engram/releases
-```
-
-**Configure in your editor:**
-
-*Claude Code* — Add to `~/.claude/settings.json`:
-```json
-{
-  "mcpServers": {
-    "engram": {
-      "command": "engram",
-      "args": ["mcp"]
-    }
-  }
-}
-```
-
-### 2. Obsidian Setup
+### 2. Obsidian vault
 
 **Create the vault structure:**
 ```bash
@@ -95,7 +78,7 @@ docs/brain/
 
 ### `/mems` — Save Individual Observations
 
-Used to record a specific learning, decision, or bugfix. Writes to **both** Engram and Obsidian.
+Used to record a specific learning, decision, or bugfix. Writes to Obsidian.
 
 **Command:**
 ```
@@ -115,24 +98,23 @@ Used to record a specific learning, decision, or bugfix. Writes to **both** Engr
 | `--tags` | No | Comma-separated tags |
 
 **What happens:**
-1. Sends data to Engram via `mem_save` MCP
-2. Detects project from `git rev-parse --show-toplevel`
-3. Maps type to Obsidian subdirectory:
+1. Detects project from `git rev-parse --show-toplevel`
+2. Maps type to Obsidian subdirectory:
    - bugfix → `Bugs/`
    - decision, architecture → `ADR/`
    - discovery, pattern, preference → `Learnings/`
    - config → `Config/`
-4. Creates note with frontmatter at:
+3. Creates note with frontmatter at:
    ```
    ~/Documents/Obsidian_Brain/Projects/[Project]/[Subdirectory]/[Title].md
    ```
-5. Updates project's `Index.md` with wikilink
+4. Updates project's `Index.md` with wikilink
 
 ---
 
 ### `/sum` — Session Close Protocol
 
-Used at the end of a session to capture the full context. Writes to **both** Engram and Obsidian.
+Used at the end of a session to capture the full context. Writes to Obsidian.
 
 **Command:**
 ```
@@ -150,60 +132,29 @@ Used at the end of a session to capture the full context. Writes to **both** Eng
 | `--tags` | No | Optional tags |
 
 **What happens:**
-1. Sends summary to Engram via `mem_session_summary` MCP
-2. Creates note at:
+1. Creates note at:
    ```
    ~/Documents/Obsidian_Brain/Projects/[Project]/Learnings/Session - [Date].md
    ```
-3. Updates project's `Index.md`
-
----
-
-## Auto-Triggered Saves (Engram Only)
-
-> [!IMPORTANT]
-> Auto-triggered saves via `mem_save` write **only to Engram**, not to Obsidian. This is because they're triggered automatically during conversation flow.
-
-The AI is instructed to call `mem_save` automatically after these events:
-
-### Decision & Architecture
-- Architecture or design decision made
-- Team convention documented or established
-- Tool or library choice made with tradeoffs
-- API contract or interface change
-- Database schema change
-
-### Bug Fixes
-- Bug fix completed (include root cause)
-- Non-obvious error discovered
-- Edge case found and handled
-
-### Code & Patterns
-- Pattern established (naming, structure, convention)
-- Feature implemented with non-obvious approach
-- Refactoring that improves maintainability
-
-### Discovery & Learning
-- Non-obvious discovery about the codebase
-- Gotcha or unexpected behavior found
+2. Updates project's `Index.md`
 
 ---
 
 ## Searching Memory
 
-### Engram (Automatic)
-The AI automatically searches Engram when you ask questions like:
+### claude-mem (Automatic)
+Claude searches it on its own when you ask things like:
 - *"What did we work on last time?"*
 - *"What decisions were made about authentication?"*
 
 ### Obsidian (Manual)
-Search using the `obsidian-vault` skill or directly:
+Search with the `mems` skill, or directly:
 ```bash
 # Search within current project
 grep -rl "keyword" "$PROJECT_PATH" --include="*.md"
 
 # Search across all projects
-grep -rl "keyword" "/Users/orla/Obsidian_Brain/" --include="*.md"
+grep -rl "keyword" "$HOME/Documents/Obsidian_Brain/" --include="*.md"
 ```
 
 ---
@@ -250,10 +201,10 @@ A "work session" is a continuous period of collaboration — not necessarily a s
 - Before ending the conversation or closing the editor
 
 **Why this matters:**
-- Auto-triggered saves only go to Engram (not Obsidian)
-- `/sum` ensures both systems have the full context
-- Future sessions can retrieve the complete picture via Engram semantic search
-- Obsidian provides archival reference for long-term context
+- claude-mem records what happened, but not why you chose it — that part only
+  exists if you write it
+- `/sum` is what leaves a note you can reread months later
+- Obsidian is the archival half: ADRs and bug logs outlive any session history
 
 **Recommended frequency**: At least once per feature/task, not just once per day.
 

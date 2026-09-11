@@ -19,16 +19,16 @@ ln -s ~/dev/my-ai-stack/agents ./.claude/agents
 3. Copy the `CONTEXT.template.md` to your project root, rename it to `CONTEXT.md`, and fill in your project's specific business logic and domain model.
 4. Update your project's local rules file (`.agents/rules.md`) to include this instruction:
    `Always adhere to the global engineering standards defined in the symlinked AI stack, and read CONTEXT.md before proceeding.`
-5. Configure persistent memory — Engram MCP + Obsidian (see `PERSISTENT-MEMORY.md` for full guide).
+5. Configure persistent memory — claude-mem + Obsidian (see `PERSISTENT-MEMORY.md` for full guide).
 
 This stack combines two memory systems:
-- **Engram MCP**: Automatic, session-persistent memory. AI retrieves context automatically.
+- **claude-mem**: Automatic session memory, captured by hooks. Claude retrieves it on its own.
 - **Obsidian**: Structured documentation (ADRs, bug logs) via symlinks.
 
-Use `/mems` to save observations, `/sum` to close sessions — both write to both systems.
+Use `/mems` to save observations and `/sum` to close sessions. Both write to Obsidian; claude-mem needs no prompting.
 
 > [!IMPORTANT]
-> Auto-triggered saves (AI calling `mem_save` automatically) only write to Engram, not Obsidian. Always run `/sum` at the end of each work session to ensure complete documentation in both systems.
+> claude-mem records what happened, not why you decided it. Run `/sum` at the end of each work session so the reasoning lands in Obsidian too.
 
 ## Available Skills
 
@@ -58,11 +58,11 @@ Skills are modular instructions that the AI can execute to solve specific proble
 ### Productivity and Personal
 - **caveman**: Ultra-compressed communication mode. Cuts token usage by dropping pleasantries.
 - **grill-me**: Interview the user relentlessly about a plan until reaching shared understanding.
-- **mems**: Save, search, and retrieve persistent memory across sessions with Engram.
+- **mems**: Document decisions, bugs and learnings to the Obsidian vault via `/mems` and `/sum`.
 
-## Available Personas
+## Available Agents
 
-Personas dictate the overarching behavior, expertise, and mindset of the AI during a session. Invoke them when you need a specific type of engineering focus.
+Agents dictate the overarching behavior, expertise, and mindset of the AI during a session. Invoke them when you need a specific type of engineering focus.
 
 - **backend-architect**: Focuses on database design, scalability, and robust API development.
 - **frontend-architect**: Focuses on UI/UX, React/Next.js state management, and component modularity.
