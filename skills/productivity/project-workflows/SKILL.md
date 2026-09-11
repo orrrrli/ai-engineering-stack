@@ -1,11 +1,11 @@
 ---
 name: project-workflows
-description: Generate a project-specific WORKFLOWS.md that maps named slash-command chains to personas and skills, tailored to the project's stack, domain, and conventions. Use when user wants to define workflows for a project, set up a new project's AI tooling, or asks "how do I apply these skills to my project".
+description: Generate a project-specific WORKFLOWS.md that maps named slash-command chains to agents and skills, tailored to the project's stack, domain, and conventions. Use when user wants to define workflows for a project, set up a new project's AI tooling, or asks "how do I apply these skills to my project".
 ---
 
 # Project Workflows
 
-Generates a `WORKFLOWS.md` inside the target project's `.claude/` folder with named, domain-aware workflow chains built from available personas and skills.
+Generates a `WORKFLOWS.md` inside the target project's `.claude/` folder with named, domain-aware workflow chains built from available agents and skills.
 
 ## Quick start
 
@@ -36,7 +36,7 @@ Cargo.toml              ← Rust
 
 If none exist, ask the user: "What's the stack and main domain of this project?"
 
-### 3. Map stack → personas + skills
+### 3. Map stack → agents + skills
 
 Use the table in [STACK-MAP.md](./STACK-MAP.md) to decide which skills apply.
 When a project has both frontend and backend, include both tracks.

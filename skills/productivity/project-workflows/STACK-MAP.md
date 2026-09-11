@@ -1,6 +1,6 @@
 # Stack → Skills Map
 
-Used by the `project-workflows` skill to decide which skills and personas to include.
+Used by the `project-workflows` skill to decide which skills and agents to include.
 
 ## Detection signals
 

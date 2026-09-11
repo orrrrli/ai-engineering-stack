@@ -19,10 +19,10 @@ for agent_dir in .agents .claude .opencode .windsurf; do
     
     if [ "$agent_dir" = ".claude" ]; then
         ln -s "$STACK_DIR/skills" "$agent_dir/commands"
-        ln -s "$STACK_DIR/personas" "$agent_dir/agents"
+        ln -s "$STACK_DIR/agents" "$agent_dir/agents"
     elif [ "$agent_dir" = ".windsurf" ]; then
         ln -s "$STACK_DIR/skills" "$agent_dir/skills"
-        ln -s "$STACK_DIR/personas" "$agent_dir/personas"
+        ln -s "$STACK_DIR/agents" "$agent_dir/personas"
         
         # Create workflows directory for Windsurf slash commands
         mkdir -p "$agent_dir/workflows"
@@ -34,7 +34,7 @@ for agent_dir in .agents .claude .opencode .windsurf; do
         done
     else
         ln -s "$STACK_DIR/skills" "$agent_dir/skills"
-        ln -s "$STACK_DIR/personas" "$agent_dir/personas"
+        ln -s "$STACK_DIR/agents" "$agent_dir/personas"
     fi
     echo "✅ Setup symlinks in $agent_dir"
 done

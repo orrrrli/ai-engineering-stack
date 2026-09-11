@@ -13,7 +13,7 @@ To install this stack into a new or existing project, you must create a symbolic
 # Example for a project using Claude Code / OpenCode / Windsurf
 mkdir -p .agents
 ln -s ~/dev/my-ai-stack/skills ./.agents/skills
-ln -s ~/dev/my-ai-stack/personas ./.agents/personas
+ln -s ~/dev/my-ai-stack/agents ./.claude/agents
 ```
 
 3. Copy the `CONTEXT.template.md` to your project root, rename it to `CONTEXT.md`, and fill in your project's specific business logic and domain model.
