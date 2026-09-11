@@ -1,5 +1,6 @@
 ---
 name: code-optimize
+stacks: [all]
 description: Analyze and optimize code for performance, memory, and efficiency
 model: claude-sonnet-4-5
 ---

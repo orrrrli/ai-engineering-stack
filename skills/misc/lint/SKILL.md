@@ -1,5 +1,6 @@
 ---
 name: lint
+stacks: [all]
 description: Run linting and fix code quality issues
 model: claude-sonnet-4-5
 ---

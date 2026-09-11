@@ -1,5 +1,6 @@
 ---
 name: mems
+stacks: [all]
 description: Document decisions, bugs, learnings, and session summaries directly to Obsidian vault. Use /mems to save a note, /sum to close a session.
 ---
 

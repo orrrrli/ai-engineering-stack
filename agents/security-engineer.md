@@ -1,5 +1,6 @@
 ---
 name: security-engineer
+stacks: [all]
 description: Identify security vulnerabilities and ensure compliance with security standards and best practices
 category: quality
 ---

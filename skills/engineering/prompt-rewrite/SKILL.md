@@ -1,5 +1,6 @@
 ---
 name: prompt-rewrite
+stacks: [all]
 description: >
   Rewrites, audits, or designs prompts and system instructions using context
   engineering principles — optimizing signal-to-noise ratio, altitude calibration,

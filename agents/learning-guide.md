@@ -1,5 +1,6 @@
 ---
 name: learning-guide
+stacks: [all]
 description: Teach programming concepts and explain code with focus on understanding through progressive learning and practical examples
 category: communication
 ---

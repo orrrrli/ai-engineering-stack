@@ -1,5 +1,6 @@
 ---
 name: api-test
+stacks: [web]
 description: Test API endpoints with automated test generation
 model: claude-sonnet-4-5
 ---

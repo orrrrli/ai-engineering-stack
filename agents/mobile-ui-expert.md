@@ -1,5 +1,6 @@
 ---
 name: mobile-ui-expert
+stacks: [android]
 description: Specialist in mobile-first design, touch interfaces, and mobile performance optimization
 category: engineering
 ---

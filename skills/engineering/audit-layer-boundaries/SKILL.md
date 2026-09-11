@@ -1,5 +1,6 @@
 ---
 name: audit-layer-boundaries
+stacks: [web]
 description: Scan the codebase for the three architectural violations that break the layer contract in this project. Use when adding new features, after a large refactor, or whenever you suspect imports have drifted.
 ---
 

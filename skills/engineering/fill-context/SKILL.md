@@ -1,5 +1,6 @@
 ---
 name: fill-context
+stacks: [all]
 description: >
   Build or regenerate the full .claude/ context tree by scanning the codebase and
   grilling the developer on what can't be inferred from code alone. Produces a

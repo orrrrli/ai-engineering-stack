@@ -1,5 +1,6 @@
 ---
 name: component-adapt
+stacks: [web]
 description: Replicate, adapt, and integrate UI components from Figma designs, external source files (.tsx), or images into the project. Use when the user wants to adapt an external component, copy a design, or integrate a downloaded component while respecting the project's architecture.
 ---
 

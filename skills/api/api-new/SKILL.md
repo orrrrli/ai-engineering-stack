@@ -1,5 +1,6 @@
 ---
 name: api-new
+stacks: [web]
 description: Create a new Next.js API route with validation, error handling, and TypeScript
 ---
 

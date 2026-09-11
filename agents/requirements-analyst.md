@@ -1,5 +1,6 @@
 ---
 name: requirements-analyst
+stacks: [all]
 description: Transform ambiguous project ideas into concrete specifications through systematic requirements discovery and structured analysis
 category: analysis
 ---

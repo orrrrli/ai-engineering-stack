@@ -1,5 +1,6 @@
 ---
 name: code-cleanup
+stacks: [all]
 description: Refactor and clean up code following best practices
 model: claude-sonnet-4-5
 ---

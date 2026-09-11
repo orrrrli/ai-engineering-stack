@@ -1,5 +1,6 @@
 ---
 name: component-new
+stacks: [web]
 description: Create a new React component with TypeScript and modern best practices
 ---
 

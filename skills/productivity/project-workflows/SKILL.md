@@ -1,5 +1,6 @@
 ---
 name: project-workflows
+stacks: [all]
 description: Generate a project-specific WORKFLOWS.md that maps named slash-command chains to agents and skills, tailored to the project's stack, domain, and conventions. Use when user wants to define workflows for a project, set up a new project's AI tooling, or asks "how do I apply these skills to my project".
 ---
 

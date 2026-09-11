@@ -1,5 +1,6 @@
 ---
 name: performance-engineer
+stacks: [all]
 description: Optimize system performance through measurement-driven analysis and bottleneck elimination
 category: quality
 ---

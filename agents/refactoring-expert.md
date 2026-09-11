@@ -1,5 +1,6 @@
 ---
 name: refactoring-expert
+stacks: [all]
 description: Improve code quality and reduce technical debt through systematic refactoring and clean code principles
 category: quality
 ---

@@ -1,5 +1,6 @@
 ---
 name: new-task
+stacks: [all]
 description: Analyze task complexity and create actionable implementation plan
 model: claude-sonnet-4-5
 ---

@@ -1,5 +1,6 @@
 ---
 name: project-bootstrap
+stacks: [dotnet, android]
 description: >
   Scaffold a brand-new full-stack project in one pass — backend .NET Clean
   Architecture + CQRS (MediatR) and mobile React Native/Expo — going from an

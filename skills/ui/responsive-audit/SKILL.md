@@ -1,5 +1,6 @@
 ---
 name: responsive-audit
+stacks: [web]
 description: Review and audit UI components for mobile responsiveness and adaptive behavior
 ---
 

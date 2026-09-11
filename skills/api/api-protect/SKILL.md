@@ -1,5 +1,6 @@
 ---
 name: api-protect
+stacks: [web]
 description: Add authentication, authorization, and security to API endpoints
 model: claude-sonnet-4-5
 ---

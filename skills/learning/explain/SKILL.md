@@ -1,5 +1,6 @@
 ---
 name: explain
+stacks: [web]
 description: Explain how axiriam-shop works — traces code flows from DB to UI through the layer architecture, teaches debugging approaches, and explains fixes like a senior developer. Use when the user asks "how does X work", "why is this failing", "explain this", "what happens when", or wants to understand any part of the codebase.
 ---
 

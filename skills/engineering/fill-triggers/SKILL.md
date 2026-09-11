@@ -1,5 +1,6 @@
 ---
 name: fill-triggers
+stacks: [all]
 description: >
   Build or regenerate .claude/engineering/agent-triggers.md — an explicit,
   version-controlled table mapping repo layers/paths to which specialized

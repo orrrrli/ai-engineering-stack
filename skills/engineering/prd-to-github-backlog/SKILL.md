@@ -1,5 +1,6 @@
 ---
 name: prd-to-github-backlog
+stacks: [all]
 description: "Turn a PRD/spec into a GitHub Project with a full engineering backlog: epics → story sub-issues → task sub-issues, organized by phase and sprint, with sizes/estimates, area labels (backend/frontend/design/QA/security/devops), and project fields (Status/Sprint/Size/Estimate). Use when the user wants to create a GitHub project + issues + sub-tasks from a PRD, build/seed a backlog, decompose a spec into epics/stories/tasks, or set up a project board from requirements."
 trigger: /prd-to-github-backlog
 ---

@@ -1,5 +1,6 @@
 ---
 name: adapt-endpoint
+stacks: [web]
 description: Adapt a metavix-api backend endpoint to the frontend — generates types, API client function, and TanStack Query hook ready to use in components.
 ---
 

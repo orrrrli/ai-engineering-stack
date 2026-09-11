@@ -1,5 +1,6 @@
 ---
 name: quality-review
+stacks: [all]
 description: >
   Reviews code for quality, security, maintainability, and performance beyond
   spec compliance. Checks clean code practices, error handling, security
