@@ -17,7 +17,7 @@ version: "1.0.0"
 
 Make agent delegation **deterministic and inspectable** instead of a
 per-turn judgment call. Produces one file, `.claude/engineering/agent-triggers.md`,
-linked from `.claude/CLAUDE.md`, that states exactly which path/condition
+linked from the root `CLAUDE.md`, that states exactly which path/condition
 maps to which subagent.
 
 **Core principle:** derive triggers from the repo's real layers, not a
@@ -29,7 +29,7 @@ gets no row.
 ## Phase 0 — Require context first
 
 ```bash
-cat .claude/CLAUDE.md 2>/dev/null
+cat CLAUDE.md 2>/dev/null
 ```
 
 - If missing or still template placeholders, stop and tell the developer to
@@ -123,16 +123,16 @@ Wait for confirmation, then write the file.
 
 ---
 
-## Phase 5 — Link it from CLAUDE.md
+## Phase 5 — Link it from the root CLAUDE.md
 
-Add this line under the `## Engineering` section of `.claude/CLAUDE.md` (create
+Add this line under the `## Engineering` section of the root `CLAUDE.md` (create
 the section if `fill-context` hasn't run recently enough to have it):
 
 ```markdown
-- [Agent Triggers](engineering/agent-triggers.md) — when to delegate to a specialized subagent
+- [Agent Triggers](.claude/engineering/agent-triggers.md) — when to delegate to a specialized subagent
 ```
 
-Print: "✅ Triggers written to `.claude/engineering/agent-triggers.md` and linked from CLAUDE.md."
+Print: "✅ Triggers written to `.claude/engineering/agent-triggers.md` and linked from the root CLAUDE.md."
 
 ---
 

@@ -4,9 +4,9 @@ description: >
   Build or regenerate the full .claude/ context tree by scanning the codebase and
   grilling the developer on what can't be inferred from code alone. Produces a
   multi-file context structure (business, architecture, domains, engineering) with
-  CLAUDE.md as the index. Use after project init or whenever context is missing,
-  stale, or incomplete.
-version: "2.0.0"
+  the root CLAUDE.md as the index. Use after project init or whenever context is
+  missing, stale, or incomplete.
+version: "3.0.0"
 modes: [architect]
 ---
 
@@ -16,10 +16,18 @@ Build a complete `.claude/` context tree from real project data — not guesses,
 
 **Core principle:** Derive everything possible from the codebase first. Only ask the developer for what the code cannot tell you.
 
+**Why the root `CLAUDE.md` is the index, not `.claude/CLAUDE.md`:** Claude Code
+auto-loads the repo-root `CLAUDE.md` into every session automatically. Nothing
+inside `.claude/` gets that same auto-load treatment — a file there is only read
+if something (a link, an explicit request) leads Claude to open it. Putting the
+index inside `.claude/` orphans it: the segmented context tree exists on disk but
+nothing guarantees it's ever discovered. So the root `CLAUDE.md` IS the index —
+there is no separate `.claude/CLAUDE.md`.
+
 **Output structure:**
 ```
+CLAUDE.md                    # Main index — auto-loaded by Claude Code, root of the repo
 .claude/
-├── CLAUDE.md                # Main index — auto-loaded by Claude Code
 ├── business/
 │   ├── overview.md          # Purpose, users, success metrics
 │   ├── rules.md             # Non-negotiable business rules
@@ -62,9 +70,9 @@ find . -name "*.sql" -not -path '*/node_modules/*' | head -5 | xargs cat 2>/dev/
 cat README.md 2>/dev/null | head -80
 ```
 
-### 1.5 Existing .claude/ context
+### 1.5 Existing context
 ```bash
-ls .claude/ 2>/dev/null && cat .claude/CLAUDE.md 2>/dev/null
+cat CLAUDE.md 2>/dev/null && ls .claude/ 2>/dev/null
 ```
 
 ### 1.6 Engineering conventions
@@ -110,32 +118,47 @@ Wait for the developer's answers before proceeding to Phase 3.
 
 Using Phase 1 data + Phase 2 answers, generate every file. Show file content to the developer before writing.
 
-### `.claude/CLAUDE.md`
+### Root `CLAUDE.md` — the index
+
+**If a root `CLAUDE.md` already exists with real content** (not a bare stub, and not
+just this skill's own index format from a prior run): do NOT overwrite it wholesale.
+Read it fully first. Any section in it that doesn't already belong in the segmented
+tree (team workflow, git conventions, ticket-tracker config, deploy commands, etc.)
+stays in the root file, verbatim, in its own section — merge the index links in
+underneath rather than replacing the file. The root file is allowed to carry both
+project-specific operating rules AND the context index at once; it does not need to
+be minimal. What it must never be is a stub that just points at a second index file
+inside `.claude/` — see the "Why the root CLAUDE.md is the index" note above.
+
+**If no root `CLAUDE.md` exists, or it's just the bare `init-project.sh` stub:**
+generate it fresh with this shape:
 
 ```markdown
-# [Project Name] — Context Index
+# [Project Name] — Claude Code Instructions
 
-> This index is auto-loaded by Claude Code. Read the linked files for domain, architecture, and business context before proposing changes or adding new entities.
+[If existing root content had a project description/intro, keep it here verbatim.]
 
 ## Business
-- [Overview](business/overview.md) — Purpose, users, success metrics
-- [Rules](business/rules.md) — Non-negotiable business rules
-- [Glossary](business/glossary.md) — Ubiquitous language
+- [Overview](.claude/business/overview.md) — Purpose, users, success metrics
+- [Rules](.claude/business/rules.md) — Non-negotiable business rules
+- [Glossary](.claude/business/glossary.md) — Ubiquitous language
 
 ## Architecture
-- [Overview](architecture/overview.md) — Stack, patterns, directory structure
-- [Integrations](architecture/integrations.md) — External services and APIs
+- [Overview](.claude/architecture/overview.md) — Stack, patterns, directory structure
+- [Integrations](.claude/architecture/integrations.md) — External services and APIs
 
 ## Domains
 [One link per detected entity]
-- [[Entity]](domains/[entity].md)
+- [[Entity]](.claude/domains/[entity].md)
 
 ## Engineering
-- [Standards](engineering/standards.md) — Coding conventions and patterns
-- [Testing](engineering/testing.md) — Test strategy and commands
+- [Standards](.claude/engineering/standards.md) — Coding conventions and patterns
+- [Testing](.claude/engineering/testing.md) — Test strategy and commands
 [If .claude/engineering/agent-triggers.md exists, add this line too:]
-- [Agent Triggers](engineering/agent-triggers.md) — when to delegate to a specialized subagent
+- [Agent Triggers](.claude/engineering/agent-triggers.md) — when to delegate to a specialized subagent
 ```
+
+Note all links are relative to the repo root (`.claude/business/...`), not to `.claude/` itself.
 
 ---
 
@@ -272,11 +295,13 @@ Using Phase 1 data + Phase 2 answers, generate every file. Show file content to 
 
 ## Phase 4 — Confirm and Write
 
-1. Show the developer the full list of files to be created with a one-line summary of each
+1. Show the developer the full list of files to be created/modified with a one-line
+   summary of each, INCLUDING whether the root `CLAUDE.md` is being merged-into vs.
+   created fresh
 2. Ask: "Does this look right? Anything to adjust before I write?"
 3. Wait for confirmation
-4. Write all files to `.claude/`
-5. Print: "✅ Context built. [N] files written to `.claude/`"
+4. Write the root `CLAUDE.md` and all files to `.claude/`
+5. Print: "✅ Context built. [N] files written ([root CLAUDE.md merged/created] + N under `.claude/`)."
 
 ---
 
@@ -285,7 +310,8 @@ Using Phase 1 data + Phase 2 answers, generate every file. Show file content to 
 - NEVER write placeholder text like `[Entity 1]` or `[Ex: ...]` in any output file. If you don't know something, ask.
 - NEVER skip Phase 1. Asking for information the code already has wastes the developer's time.
 - NEVER ask more than 4 questions in Phase 2.
-- If `.claude/CLAUDE.md` exists AND does NOT contain the phrase "Context not yet generated", treat it as real content: show it and ask "Context already exists — regenerate everything, update a specific file, or add a new domain?" A stub created by `init-project.sh` always contains that phrase — skip the prompt and proceed directly to Phase 1.
+- NEVER create a `.claude/CLAUDE.md` file. The index always lives in the root `CLAUDE.md` — see "Why the root CLAUDE.md is the index" above. If a stray `.claude/CLAUDE.md` is found during Phase 1, its content must be merged into the root `CLAUDE.md` and the stray file deleted as part of this run.
+- If a root `CLAUDE.md` exists AND does NOT contain the phrase "Context not yet generated", treat it as real content: show it and ask "Context already exists — regenerate everything, update a specific file, or add a new domain?" A stub created by `init-project.sh` always contains that phrase — skip the prompt and proceed directly to Phase 1.
 - If the project has no `package.json` and no recognized structure, say so and ask what stack they're using before scanning further.
 - Domain files are generated only for entities found in the schema or models. Never invent entities.
 - Omit `Global State` from `architecture/overview.md` if no state management library is detected.

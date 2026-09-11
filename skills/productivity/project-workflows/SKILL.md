@@ -26,7 +26,7 @@ Generates a `WORKFLOWS.md` inside the target project's `.claude/` folder with na
 ### 2. Read project context (in order, stop when enough is known)
 
 ```
-.claude/CLAUDE.md       ← conventions, stack overrides, rules
+CLAUDE.md                ← conventions, stack overrides, rules (repo root)
 .agents/CONTEXT.md      ← domain model, business rules, architecture
 package.json            ← JS/TS stack (Next.js, Supabase, Prisma, Stripe…)
 *.csproj / *.sln        ← .NET stack

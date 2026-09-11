@@ -140,7 +140,7 @@ with the first task.
 
 4. **Read the project context index** — find it using this fallback order:
    ```
-   .claude/CLAUDE.md (standard fill-context structure)
+   CLAUDE.md (standard fill-context structure — root of the repo)
    → .agents/CONTEXT.md (alt structure)
    → AGENTS.md (alt structure)
    ```

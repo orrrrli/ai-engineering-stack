@@ -145,9 +145,11 @@ if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
     echo "✅ Created .agents/rules.md"
 fi
 
-# 7. Setup CLAUDE.md
-if [ ! -f ".claude/CLAUDE.md" ]; then
-    cat > ".claude/CLAUDE.md" <<EOF
+# 7. Setup root CLAUDE.md
+# Claude Code auto-loads the repo-root CLAUDE.md into every session — nothing
+# inside .claude/ gets that treatment, so this must live at the repo root.
+if [ ! -f "CLAUDE.md" ]; then
+    cat > "CLAUDE.md" <<EOF
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -164,7 +166,9 @@ dotnet build         # Build project
 dotnet test          # Run tests
 \`\`\`
 EOF
-    echo "✅ Created .claude/CLAUDE.md"
+    echo "✅ Created CLAUDE.md"
+else
+    echo "⚠️ CLAUDE.md already exists, skipping."
 fi
 
 echo "🎉 .NET Initialization complete for $PROJECT_NAME!"

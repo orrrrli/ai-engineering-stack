@@ -3,7 +3,7 @@ name: project-bootstrap
 description: >
   Scaffold a brand-new full-stack project in one pass — backend .NET Clean
   Architecture + CQRS (MediatR) and mobile React Native/Expo — going from an
-  already-filled .claude/CLAUDE.md context straight to a working skeleton plus
+  already-filled root CLAUDE.md context straight to a working skeleton plus
   exactly one vertical slice example feature implemented end-to-end. Fills the
   gap between fill-context (context only, no code) and sdd-apply (per-issue,
   too granular for day-zero). Use when the user wants to "levantar el
@@ -31,7 +31,7 @@ This skill answers the code-structure questions once, concretely, and stops.
 doesn't make them.
 
 ```bash
-cat .claude/CLAUDE.md 2>/dev/null
+cat CLAUDE.md 2>/dev/null
 ```
 
 - If the file is missing, or contains placeholder text like `[Entity 1]` or
@@ -183,7 +183,7 @@ Point the developer at:
 
 ## Hard rules
 
-- **Never run without a filled `.claude/CLAUDE.md`.** Phase 0 is not
+- **Never run without a filled root `CLAUDE.md`.** Phase 0 is not
   optional — this skill must not invent business rules or entity names.
 - **Exactly one vertical slice.** Not auth, not multiple entities, not every
   CRUD verb — one Command or Query, one endpoint, one screen. More features
