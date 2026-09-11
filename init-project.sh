@@ -2,8 +2,68 @@
 
 # Resolves the absolute path to the directory containing this script
 STACK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TARGET_DIR="${1:-$(pwd)}"
+# Parse args: optional target dir, plus --stack=all|web|dotnet|android
+STACK="all"
+POSITIONAL=()
+for arg in "$@"; do
+    case "$arg" in
+        --stack=*) STACK="${arg#--stack=}" ;;
+        -h|--help)
+            echo "usage: init-project.sh [target-dir] [--stack=all|web|dotnet|android]"
+            exit 0 ;;
+        *) POSITIONAL+=("$arg") ;;
+    esac
+done
+case "$STACK" in
+    all|web|dotnet|android) ;;
+    *) echo "❌ Unknown stack '$STACK'. Use: all, web, dotnet, android"; exit 1 ;;
+esac
+
+TARGET_DIR="${POSITIONAL[0]:-$(pwd)}"
 PROJECT_NAME="$(basename "$TARGET_DIR")"
+
+# --- stack filtering -------------------------------------------------------
+# Returns 0 if the file's `stacks:` frontmatter includes $STACK (or "all").
+stack_match() {
+    [ "$STACK" = "all" ] && return 0
+    local line
+    # -a: some SKILL.md files contain stray control bytes, and without it grep
+    # answers "Binary file ... matches" instead of the line.
+    line="$(grep -a -m1 '^stacks: \[' "$1")" || return 1
+    case "$line" in
+        *all*|*"$STACK"*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# Symlinks every matching skill into $1, keeping the category/ nesting so
+# slash-command names stay <category>:<skill>.
+link_stack_skills() {
+    local dest="$1" cat skill
+    LINKED_SKILLS=0
+    mkdir -p "$dest"
+    for cat in "$STACK_DIR/skills"/*/; do
+        for skill in "$cat"*/; do
+            [ -f "${skill}SKILL.md" ] || continue
+            stack_match "${skill}SKILL.md" || continue
+            mkdir -p "$dest/$(basename "$cat")"
+            ln -sfn "${skill%/}" "$dest/$(basename "$cat")/$(basename "$skill")"
+            LINKED_SKILLS=$((LINKED_SKILLS + 1))
+        done
+    done
+}
+
+link_stack_agents() {
+    local dest="$1" f
+    LINKED_AGENTS=0
+    mkdir -p "$dest"
+    for f in "$STACK_DIR/agents"/*.md; do
+        stack_match "$f" || continue
+        ln -sfn "$f" "$dest/$(basename "$f")"
+        LINKED_AGENTS=$((LINKED_AGENTS + 1))
+    done
+}
+
 
 echo "Initializing AI Stack for project: $PROJECT_NAME at $TARGET_DIR"
 
@@ -14,12 +74,13 @@ cd "$TARGET_DIR" || { echo "Failed to cd to $TARGET_DIR"; exit 1; }
 mkdir -p .claude .agents
 
 # Remove old symlinks, including names used before the Claude-Code-only migration
-rm -f .claude/skills .claude/commands .claude/agents .claude/personas
+rm -rf .claude/commands .claude/agents
+rm -f .claude/skills .claude/personas
 rm -f .agents/skills .agents/personas .agents/commands .agents/agents
 
-ln -s "$STACK_DIR/skills" ".claude/commands"
-ln -s "$STACK_DIR/agents"  ".claude/agents"
-echo "✅ Setup symlinks in .claude"
+link_stack_skills ".claude/commands"
+link_stack_agents  ".claude/agents"
+echo "✅ Linked $LINKED_SKILLS skills and $LINKED_AGENTS agents for stack '$STACK'"
 
 # 2. Setup .claude/ context subdirectories
 for context_dir in .claude/business .claude/architecture .claude/domains .claude/engineering; do
