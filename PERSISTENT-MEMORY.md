@@ -47,7 +47,7 @@ brew install engram-cli
 
 **Configure in your editor:**
 
-*Claude Code / OpenCode* — Add to `~/.claude/settings.json`:
+*Claude Code* — Add to `~/.claude/settings.json`:
 ```json
 {
   "mcpServers": {
@@ -58,8 +58,6 @@ brew install engram-cli
   }
 }
 ```
-
-*Windsurf* — Add to `~/.windsurf/config.json`.
 
 ### 2. Obsidian Setup
 

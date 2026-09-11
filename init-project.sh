@@ -10,34 +10,16 @@ echo "Initializing AI Stack for project: $PROJECT_NAME at $TARGET_DIR"
 mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR" || { echo "Failed to cd to $TARGET_DIR"; exit 1; }
 
-# 1. Setup dot directories and symlinks
-for agent_dir in .agents .claude .opencode .windsurf; do
-    mkdir -p "$agent_dir"
-    
-    # Remove old symlinks if they exist
-    rm -f "$agent_dir/skills" "$agent_dir/personas" "$agent_dir/commands" "$agent_dir/agents"
-    
-    if [ "$agent_dir" = ".claude" ]; then
-        ln -s "$STACK_DIR/skills" "$agent_dir/commands"
-        ln -s "$STACK_DIR/agents" "$agent_dir/agents"
-    elif [ "$agent_dir" = ".windsurf" ]; then
-        ln -s "$STACK_DIR/skills" "$agent_dir/skills"
-        ln -s "$STACK_DIR/agents" "$agent_dir/personas"
-        
-        # Create workflows directory for Windsurf slash commands
-        mkdir -p "$agent_dir/workflows"
-        find "$STACK_DIR/skills" -type f -name "SKILL.md" | while read -r skill_file; do
-            skill_dir=$(dirname "$skill_file")
-            skill_name=$(basename "$skill_dir")
-            rm -f "$agent_dir/workflows/$skill_name.md"
-            ln -s "$skill_file" "$agent_dir/workflows/$skill_name.md"
-        done
-    else
-        ln -s "$STACK_DIR/skills" "$agent_dir/skills"
-        ln -s "$STACK_DIR/agents" "$agent_dir/personas"
-    fi
-    echo "✅ Setup symlinks in $agent_dir"
-done
+# 1. Setup Claude Code symlinks
+mkdir -p .claude .agents
+
+# Remove old symlinks, including names used before the Claude-Code-only migration
+rm -f .claude/skills .claude/commands .claude/agents .claude/personas
+rm -f .agents/skills .agents/personas .agents/commands .agents/agents
+
+ln -s "$STACK_DIR/skills" ".claude/commands"
+ln -s "$STACK_DIR/agents"  ".claude/agents"
+echo "✅ Setup symlinks in .claude"
 
 # 2. Setup .claude/ context subdirectories
 for context_dir in .claude/business .claude/architecture .claude/domains .claude/engineering; do
@@ -86,11 +68,8 @@ echo "✅ Setup docs/brain symlink"
 GITIGNORE_ENTRIES=(
     ".agents/"
     ".claude/"
-    ".opencode/"
-    ".windsurf/"
     "docs/brain/"
     "docs/brain"
-    "opencode.json"
     "GEMINI.md"
 )
 
@@ -119,18 +98,6 @@ sed -i '' '/^$/N;/^\n$/D' ".gitignore" 2>/dev/null || true
 # 6. Global & Editor Rules
 RULE_CONTENT="Always adhere to the global engineering standards defined in the symlinked AI stack, and read the root CLAUDE.md before proceeding. For deep architectural context, check docs/brain/Index.md."
 
-# Windsurf
-if [ -d ".windsurf" ] && [ ! -f ".windsurf/rules.md" ]; then
-    echo "$RULE_CONTENT" > ".windsurf/rules.md"
-    echo "✅ Created .windsurf/rules.md"
-fi
-
-# OpenCode Specific Rules
-if [ -d ".opencode" ] && [ ! -f ".opencode/rules.md" ]; then
-    echo "$RULE_CONTENT" > ".opencode/rules.md"
-    echo "✅ Created .opencode/rules.md"
-fi
-
 # General Agents Rules
 if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
     echo "$RULE_CONTENT" > ".agents/rules.md"
@@ -151,20 +118,7 @@ else
     echo "⚠️ .claude/settings.json already exists, skipping."
 fi
 
-# 8. Setup opencode.json (auto-loads CLAUDE.md via instructions field)
-if [ ! -f "opencode.json" ]; then
-    cat > "opencode.json" <<'EOF'
-{
-  "$schema": "https://opencode.ai/config.json",
-  "instructions": ["CLAUDE.md"]
-}
-EOF
-    echo "✅ Created opencode.json with instructions"
-else
-    echo "⚠️ opencode.json already exists, skipping."
-fi
-
-# 9. Setup GEMINI.md (auto-loaded by Gemini CLI, imports CLAUDE.md)
+# 8. Setup GEMINI.md (auto-loaded by Gemini CLI, imports CLAUDE.md)
 if [ ! -f "GEMINI.md" ]; then
     cat > "GEMINI.md" <<'EOF'
 @CLAUDE.md
@@ -174,7 +128,7 @@ else
     echo "⚠️ GEMINI.md already exists, skipping."
 fi
 
-# 10. Setup root CLAUDE.md as context index
+# 9. Setup root CLAUDE.md as context index
 # Claude Code auto-loads the repo-root CLAUDE.md into every session — nothing
 # inside .claude/ gets that treatment, so the index must live here, not at
 # .claude/CLAUDE.md. If a root CLAUDE.md already exists (e.g. checked-in team

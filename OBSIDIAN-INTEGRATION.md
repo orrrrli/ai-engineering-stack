@@ -1,6 +1,6 @@
 # Obsidian Integration Guide for AI Persistent Memory
 
-This guide explains how to connect your central Obsidian Vault to your individual projects. This setup allows your AI agents (Claude Code, Windsurf, OpenCode) to use Obsidian as a persistent memory layer, reading Architecture Decision Records (ADRs), bug logs, and domain context.
+This guide explains how to connect your central Obsidian Vault to your individual projects. This setup allows Claude Code to use Obsidian as a persistent memory layer, reading Architecture Decision Records (ADRs), bug logs, and domain context.
 
 ## 1. The Strategy: The Symlink Bridge
 AI agents running in IDEs typically operate strictly within the boundary of the current workspace directory. To allow them to read your central Obsidian vault without giving them full system access, you must bridge the vault and the project using symbolic links (symlinks).

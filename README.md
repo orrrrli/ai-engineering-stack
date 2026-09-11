@@ -1,6 +1,6 @@
 # My AI Stack
 
-This repository serves as the central AI stack for all engineering projects. It contains global rules, specialized AI personas, and advanced skills to enable highly autonomous, context-aware AI development across editors like Windsurf, Claude Code, and OpenCode.
+This repository serves as the central AI stack for all engineering projects. It contains global rules, specialized AI agents, and advanced skills to enable highly autonomous, context-aware AI development in Claude Code.
 
 ## Installation
 
@@ -10,14 +10,14 @@ To install this stack into a new or existing project, you must create a symbolic
 2. In your target project root, run the following commands to symlink the necessary directories:
 
 ```bash
-# Example for a project using Claude Code / OpenCode / Windsurf
+# Example for a project using Claude Code
 mkdir -p .agents
 ln -s ~/dev/my-ai-stack/skills ./.agents/skills
 ln -s ~/dev/my-ai-stack/agents ./.claude/agents
 ```
 
 3. Copy the `CONTEXT.template.md` to your project root, rename it to `CONTEXT.md`, and fill in your project's specific business logic and domain model.
-4. Update your project's local rules file (e.g., `.windsurf/rules.md` or `.cursorrules`) to include this instruction:
+4. Update your project's local rules file (`.agents/rules.md`) to include this instruction:
    `Always adhere to the global engineering standards defined in the symlinked AI stack, and read CONTEXT.md before proceeding.`
 5. Configure persistent memory — Engram MCP + Obsidian (see `PERSISTENT-MEMORY.md` for full guide).
 
