@@ -1,75 +1,123 @@
 # My AI Stack
 
-This repository serves as the central AI stack for all engineering projects. It contains global rules, specialized AI agents, and advanced skills to enable highly autonomous, context-aware AI development in Claude Code.
+Central AI stack for all engineering projects: global rules, specialized agents, and skills for autonomous, context-aware development in Claude Code.
+
+**Claude Code only.** Support for Windsurf, OpenCode, and other editors was removed — everything here targets Claude Code's own conventions (`.claude/commands/`, `.claude/agents/`, root `CLAUDE.md`).
 
 ## Installation
 
-To install this stack into a new or existing project, you must create a symbolic link (symlink) from your project's AI configuration directory to this central repository. This ensures that any updates you make to the master stack are instantly reflected across all your projects.
-
-1. Clone this repository to a central location on your machine (e.g., `~/dev/my-ai-stack`).
-2. In your target project root, run the following commands to symlink the necessary directories:
+Use the init script rather than symlinking by hand. It wires the symlinks, the
+context tree, the gitignore entries, and the Obsidian bridge in one pass.
 
 ```bash
-# Example for a project using Claude Code
-mkdir -p .agents
-ln -s ~/dev/my-ai-stack/skills ./.agents/skills
-ln -s ~/dev/my-ai-stack/agents ./.claude/agents
+# Web / Next.js project
+~/dev/ai-engineering-stack/init-project.sh ~/dev/my-app --stack=web
+
+# .NET Clean Architecture project
+~/dev/ai-engineering-stack/init-dotnet-project.sh ~/dev/my-api
+
+# Android / Kotlin project
+~/dev/ai-engineering-stack/init-project.sh ~/dev/my-app --stack=android
 ```
 
-3. Copy the `CONTEXT.template.md` to your project root, rename it to `CONTEXT.md`, and fill in your project's specific business logic and domain model.
-4. Update your project's local rules file (`.agents/rules.md`) to include this instruction:
-   `Always adhere to the global engineering standards defined in the symlinked AI stack, and read CONTEXT.md before proceeding.`
-5. Configure persistent memory — claude-mem + Obsidian (see `PERSISTENT-MEMORY.md` for full guide).
+### `--stack` — install only what the project needs
 
-This stack combines two memory systems:
-- **claude-mem**: Automatic session memory, captured by hooks. Claude retrieves it on its own.
-- **Obsidian**: Structured documentation (ADRs, bug logs) via symlinks.
+Every skill and agent declares a `stacks:` field in its frontmatter, and the init
+script links only the matching ones. An Android project has no use for
+`page-new`, and a .NET project has none for `mobile-ui-expert`.
 
-Use `/mems` to save observations and `/sum` to close sessions. Both write to Obsidian; claude-mem needs no prompting.
+| `--stack` | skills | agents |
+|-----------|--------|--------|
+| `web`     | 39 | 11 |
+| `dotnet`  | 30 | 10 |
+| `android` | 30 | 10 |
+| `all`     | 42 | 12 |
+
+Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
+to `dotnet`.
+
+### After init
+
+1. Open Claude Code in the project and run `/fill-context`. It scans the codebase,
+   asks what the code cannot tell it, and writes the `.claude/` context tree with
+   the root `CLAUDE.md` as its index.
+2. Optionally run `/fill-triggers` to generate `.claude/engineering/agent-triggers.md` —
+   an explicit table of which paths delegate to which agent.
+3. For a brand-new project, `/project-bootstrap` scaffolds the skeleton plus one
+   vertical slice end to end.
+
+> The root `CLAUDE.md` is the index, not `.claude/CLAUDE.md`. Claude Code
+> auto-loads the repo-root file into every session; nothing inside `.claude/`
+> gets that treatment, so an index placed there is never guaranteed to be read.
+
+## Tooling
+
+Three tools sit around this stack. They solve different problems and none
+replaces another.
+
+| Tool | Version | What it does |
+|------|---------|--------------|
+| **rtk** | 0.47 | CLI proxy that filters and summarizes command output *before* it reaches the context. `git`, `ls`, `find`, `rg`, `docker`, `dotnet`, `pnpm` and friends get rewritten transparently by a hook. 60-90% fewer tokens on routine dev operations. |
+| **headroom** | 0.37 | Context optimization layer for LLM applications — a proxy that compresses traffic to the model, plus stored memories and a savings dashboard (`headroom savings`, `headroom dashboard`). |
+| **claude-mem** | — | Persistent memory across sessions, captured by hooks with nothing to call. Prior work is injected as context when a session opens. |
+
+`rtk` trims what the tools send; `headroom` trims what reaches the model;
+`claude-mem` remembers across sessions. See `PERSISTENT-MEMORY.md` for how
+claude-mem pairs with Obsidian.
 
 > [!IMPORTANT]
-> claude-mem records what happened, not why you decided it. Run `/sum` at the end of each work session so the reasoning lands in Obsidian too.
+> claude-mem records what happened, not why you decided it. Run `/sum` at the
+> end of each work session so the reasoning lands in Obsidian too.
 
-## Available Skills
+## Skills
 
-Skills are modular instructions that the AI can execute to solve specific problems. The AI will automatically discover these when symlinked.
+42 skills across 7 categories. Each category directory has its own README with
+one-line descriptions.
 
-### API
-- **api-new**: Create a new Next.js API route with validation, error handling, and TypeScript.
-- **api-protect**: Add authentication, authorization, and security to API endpoints.
-- **api-test**: Test API endpoints with automated test generation.
+### `engineering/` (18)
+Layer audits per stack — **audit-layer-boundaries** (web), **dotnet-clean-architecture**,
+**android-clean-architecture** — plus **sdd-apply**, **prd-to-github-backlog**,
+**project-bootstrap**, **fill-context**, **fill-triggers**, **tdd**, **diagnose**,
+**quality-review**, **grill-with-docs**, **improve-codebase-architecture**,
+**prompt-rewrite**, **to-issues**, **to-prd**, **triage**, **zoom-out**.
 
-### Engineering
-- **diagnose**: Disciplined diagnosis loop for hard bugs and performance regressions.
-- **improve-codebase-architecture**: Find refactoring opportunities and consolidate tightly-coupled modules.
-- **tdd**: Test-driven development with red-green-refactor loop.
-- **triage / to-issues / to-prd**: Break down plans into executable issues, PRDs, and manage issue workflows.
-- **grill-with-docs / zoom-out**: Challenge architectural plans against the existing domain model.
+### `api/` (4)
+**api-new**, **api-protect**, **api-test**, **adapt-endpoint**.
 
-### Misc and UI
-- **code-cleanup / code-optimize**: Refactor code following best practices and optimize for performance.
-- **lint / setup-pre-commit**: Run linting, fix quality issues, and set up Git hooks.
-- **component-new / page-new**: Create new React components or Next.js App Router pages with modern standards.
+### `ui/` (4)
+**component-new**, **component-adapt**, **page-new**, **responsive-audit**.
 
-### Supabase
-- **types-gen**: Generate TypeScript types from Supabase database schema.
-- **edge-function-new**: Create a new Supabase Edge Function with Deno.
+### `productivity/` (6)
+**ponytail**, **caveman**, **grill-me**, **handoff**, **project-workflows**, **write-a-skill**.
 
-### Productivity and Personal
-- **caveman**: Ultra-compressed communication mode. Cuts token usage by dropping pleasantries.
-- **grill-me**: Interview the user relentlessly about a plan until reaching shared understanding.
-- **mems**: Document decisions, bugs and learnings to the Obsidian vault via `/mems` and `/sum`.
+### `misc/` (8), `personal/` (1), `learning/` (1)
+See [misc/README.md](./skills/misc/README.md), [personal/README.md](./skills/personal/README.md), and `learning/explain`.
 
-## Available Agents
+## Agents
 
-Agents dictate the overarching behavior, expertise, and mindset of the AI during a session. Invoke them when you need a specific type of engineering focus.
+Agents set the behavior, expertise, and mindset for a session. Invoke one when
+the work calls for a specific engineering focus.
 
-- **backend-architect**: Focuses on database design, scalability, and robust API development.
-- **frontend-architect**: Focuses on UI/UX, React/Next.js state management, and component modularity.
-- **system-architect**: Designs high-level system interactions, infrastructure, and deployment strategies.
-- **security-engineer**: Audits code for vulnerabilities, sanitization issues, and enforces strict security policies.
-- **performance-engineer**: Profiles code, optimizes rendering, minimizes database queries, and improves load times.
-- **refactoring-expert**: Cleans up technical debt, applies SOLID principles, and simplifies complex logic.
-- **deep-research-agent / tech-stack-researcher**: Conducts exhaustive research on new technologies or complex implementation problems before writing code.
-- **requirements-analyst / technical-writer**: Translates user requirements into structured PRDs, documentation, and ADRs.
-- **learning-guide**: Acts as a mentor to explain complex topics progressively rather than just writing the code for you.
+| Agent | Focus | Stacks |
+|-------|-------|--------|
+| **backend-architect** | Database design, API reliability, data integrity | dotnet, web |
+| **frontend-architect** | UI/UX, React state management, component modularity | web |
+| **mobile-ui-expert** | Mobile-first design, touch interfaces, mobile performance | android |
+| **system-architect** | High-level system design, boundaries, long-term strategy | all |
+| **security-engineer** | Vulnerabilities, sanitization, security policy | all |
+| **performance-engineer** | Profiling, rendering, query and load-time optimization | all |
+| **refactoring-expert** | Technical debt, SOLID, simplifying complex logic | all |
+| **deep-research-agent** / **tech-stack-researcher** | Exhaustive research before writing code | all |
+| **requirements-analyst** / **technical-writer** | PRDs, documentation, ADRs | all |
+| **learning-guide** | Explains progressively instead of just writing the code | all |
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `init-project.sh` | Project setup, `--stack` aware |
+| `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
+| `global-rules.md` | Global engineering standards |
+| `PERSISTENT-MEMORY.md` | claude-mem + Obsidian memory guide |
+| `OBSIDIAN-INTEGRATION.md` | Obsidian vault symlink bridge |
+| `CONTEXT.template.md` | Legacy single-file context template, superseded by `/fill-context` |
