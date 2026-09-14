@@ -153,4 +153,3 @@ the work calls for a specific engineering focus.
 | `global-rules.md` | Global engineering standards |
 | `PERSISTENT-MEMORY.md` | claude-mem + Obsidian memory guide |
 | `OBSIDIAN-INTEGRATION.md` | Obsidian vault symlink bridge |
-| `CONTEXT.template.md` | Legacy single-file context template, superseded by `/fill-context` |
