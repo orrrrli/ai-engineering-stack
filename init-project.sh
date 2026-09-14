@@ -135,6 +135,7 @@ GITIGNORE_ENTRIES=(
     ".claude/settings.local.json"
     ".agents/"
     "docs/brain"
+    "graphify-out/"
     "GEMINI.md"
 )
 
