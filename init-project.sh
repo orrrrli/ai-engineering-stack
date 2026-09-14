@@ -16,7 +16,7 @@ for arg in "$@"; do
 done
 case "$STACK" in
     all|web|dotnet|android) ;;
-    *) echo "❌ Unknown stack '$STACK'. Use: all, web, dotnet, android"; exit 1 ;;
+    *) echo "ERROR: Unknown stack '$STACK'. Use: all, web, dotnet, android"; exit 1 ;;
 esac
 
 TARGET_DIR="${POSITIONAL[0]:-$(pwd)}"
@@ -80,13 +80,13 @@ rm -f .agents/skills .agents/personas .agents/commands .agents/agents
 
 link_stack_skills ".claude/commands"
 link_stack_agents  ".claude/agents"
-echo "✅ Linked $LINKED_SKILLS skills and $LINKED_AGENTS agents for stack '$STACK'"
+echo "OK: Linked $LINKED_SKILLS skills and $LINKED_AGENTS agents for stack '$STACK'"
 
 # 2. Setup .claude/ context subdirectories
 for context_dir in .claude/business .claude/architecture .claude/domains .claude/engineering; do
     mkdir -p "$context_dir"
 done
-echo "✅ Created .claude/ context subdirectories"
+echo "OK: Created .claude/ context subdirectories"
 
 # 3. Setup Obsidian Persistent Memory
 OBSIDIAN_BASE="$HOME/Documents/Obsidian_Brain/Projects"
@@ -102,28 +102,28 @@ if [ ! -f "$OBSIDIAN_PROJ/Index.md" ]; then
 
 Welcome to the Obsidian Brain for **$PROJECT_NAME**. This space contains all persistent memory, architectural decisions, and deep context for the project.
 
-## 🏛️ Architecture Decision Records (ADR)
+## Architecture Decision Records (ADR)
 *(Add links to ADRs here)*
 
-## 📚 Technical Documentation
+## Technical Documentation
 *(Add technical docs here)*
 
-## 🐛 Bugs & Learnings
+## Bugs & Learnings
 *(Create new notes here when tricky bugs are resolved)*
 
 ---
 *Note for AI Agents: Always use \`[[wikilinks]]\` when creating new documents to link them back to this Index.*
 EOF
-    echo "✅ Created Obsidian Index.md"
+    echo "OK: Created Obsidian Index.md"
 else
-    echo "⚠️ Obsidian Index.md already exists, skipping."
+    echo "WARNING: Obsidian Index.md already exists, skipping."
 fi
 
 # 4. Setup docs/brain symlink
 mkdir -p docs
 rm -f docs/brain
 ln -s "$OBSIDIAN_PROJ" docs/brain
-echo "✅ Setup docs/brain symlink"
+echo "OK: Setup docs/brain symlink"
 
 # 5. Gitignore
 # Ignore only what is machine-local or a symlink into the stack. The context
@@ -141,7 +141,7 @@ GITIGNORE_ENTRIES=(
 
 if [ ! -f ".gitignore" ]; then
     touch ".gitignore"
-    echo "✅ Created .gitignore"
+    echo "OK: Created .gitignore"
 fi
 
 # Add header only if it doesn't exist
@@ -153,9 +153,9 @@ fi
 for entry in "${GITIGNORE_ENTRIES[@]}"; do
     if ! grep -q "^$entry" ".gitignore"; then
         echo "$entry" >> ".gitignore"
-        echo "✅ Added $entry to .gitignore"
+        echo "OK: Added $entry to .gitignore"
     else
-        echo "⚠️ $entry already in .gitignore, skipping."
+        echo "WARNING: $entry already in .gitignore, skipping."
     fi
 done
 # Clean up potential double newlines
@@ -165,7 +165,7 @@ sed -i '' '/^$/N;/^\n$/D' ".gitignore" 2>/dev/null || true
 # ".claude/" line, which keeps ignoring everything under it. Say so — the entries
 # added above cannot override it.
 if grep -qE '^\.claude/?$' ".gitignore"; then
-    echo "⚠️  .gitignore still has a bare '.claude/' entry — it ignores the whole"
+    echo "WARNING: .gitignore still has a bare '.claude/' entry — it ignores the whole"
     echo "    context tree. Remove that line so .claude/business, architecture,"
     echo "    domains and engineering get committed."
 fi
@@ -176,7 +176,7 @@ RULE_CONTENT="Always adhere to the global engineering standards defined in the s
 # General Agents Rules
 if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
     echo "$RULE_CONTENT" > ".agents/rules.md"
-    echo "✅ Created .agents/rules.md"
+    echo "OK: Created .agents/rules.md"
 fi
 
 
@@ -188,9 +188,9 @@ if [ ! -f ".claude/settings.json" ]; then
   "hooks": {}
 }
 EOF
-    echo "✅ Created .claude/settings.json"
+    echo "OK: Created .claude/settings.json"
 else
-    echo "⚠️ .claude/settings.json already exists, skipping."
+    echo "WARNING: .claude/settings.json already exists, skipping."
 fi
 
 # 8. Setup GEMINI.md (auto-loaded by Gemini CLI, imports CLAUDE.md)
@@ -198,9 +198,9 @@ if [ ! -f "GEMINI.md" ]; then
     cat > "GEMINI.md" <<'EOF'
 @CLAUDE.md
 EOF
-    echo "✅ Created GEMINI.md"
+    echo "OK: Created GEMINI.md"
 else
-    echo "⚠️ GEMINI.md already exists, skipping."
+    echo "WARNING: GEMINI.md already exists, skipping."
 fi
 
 # 9. Setup root CLAUDE.md as context index
@@ -241,14 +241,14 @@ npm run lint         # ESLint
 npm run test         # Unit tests
 \`\`\`
 EOF
-    echo "✅ Created CLAUDE.md"
+    echo "OK: Created CLAUDE.md"
 else
-    echo "⚠️ CLAUDE.md already exists, skipping (run /fill-context to merge the context index into it)."
+    echo "WARNING: CLAUDE.md already exists, skipping (run /fill-context to merge the context index into it)."
 fi
 
 echo ""
-echo "🎉 Initialization complete for $PROJECT_NAME!"
+echo "Initialization complete for $PROJECT_NAME!"
 echo ""
-echo "👉 Next step: open Claude Code in this project and run:"
+echo "Next step: open Claude Code in this project and run:"
 echo "   /fill-context"
 echo "   The AI will scan the codebase and ask 3 questions to generate your CONTEXT.md."
