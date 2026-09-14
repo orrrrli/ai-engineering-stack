@@ -137,15 +137,28 @@ Always add the new note under the correct header in `Index.md`. Create the heade
 ## 🏛️ Architecture Decision Records (ADR)
 - [[Note Title]]
 
-## 🐛 Bugs & Fixes
+## 📚 Technical Documentation
 - [[Note Title]]
 
-## 📚 Learnings
+## 🐛 Bugs & Learnings
 - [[Note Title]]
 
 ## 📝 Session Summaries
 - [[Session - YYYY-MM-DD]]
 ```
+
+Which folder lands under which header:
+
+| Folder | Header |
+|---|---|
+| `ADR/` | Architecture Decision Records (ADR) |
+| `Docs/` | Technical Documentation |
+| `Bugs/`, `Learnings/` | Bugs & Learnings |
+| `Learnings/Session - *` | Session Summaries |
+
+Headers are matched literally, emoji included, against the existing
+`Index.md`. Do not reword them: every project index in the vault already
+uses these exact strings.
 
 If `Index.md` doesn't exist, create it with the project name as H1.
 
