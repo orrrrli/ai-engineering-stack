@@ -175,8 +175,8 @@ if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
 fi
 
 # 7. Setup root CLAUDE.md
-# Claude Code auto-loads the repo-root CLAUDE.md into every session — nothing
-# inside .claude/ gets that treatment, so this must live at the repo root.
+# Claude Code auto-loads a project CLAUDE.md from ./CLAUDE.md OR ./.claude/CLAUDE.md.
+# Both work; the root keeps it to a single instruction file, and it is the convention.
 if [ ! -f "CLAUDE.md" ]; then
     cat > "CLAUDE.md" <<EOF
 # CLAUDE.md

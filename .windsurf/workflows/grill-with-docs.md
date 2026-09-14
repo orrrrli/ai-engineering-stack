@@ -1,0 +1,1 @@
+/Users/orla/dev/ai-engineering-stack/skills/engineering/grill-with-docs/SKILL.md

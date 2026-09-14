@@ -18,16 +18,22 @@ Build a complete `.claude/` context tree from real project data — not guesses,
 **Core principle:** Derive everything possible from the codebase first. Only ask the developer for what the code cannot tell you.
 
 **Why the root `CLAUDE.md` is the index, not `.claude/CLAUDE.md`:** Claude Code
-auto-loads the repo-root `CLAUDE.md` into every session automatically. Nothing
-inside `.claude/` gets that same auto-load treatment — a file there is only read
-if something (a link, an explicit request) leads Claude to open it. Putting the
-index inside `.claude/` orphans it: the segmented context tree exists on disk but
-nothing guarantees it's ever discovered. So the root `CLAUDE.md` IS the index —
-there is no separate `.claude/CLAUDE.md`.
+accepts a project CLAUDE.md in *either* location — `./CLAUDE.md` and
+`./.claude/CLAUDE.md` are both auto-loaded at session start. So this is not
+about one being read and the other ignored. It is about picking one: keep both
+and you get two project instruction files that drift apart, and the docs warn
+that contradicting instructions make Claude choose arbitrarily. The root file
+is the convention — `/init` writes there, and it is what shows up on clone. So
+the root `CLAUDE.md` IS the index; there is no separate `.claude/CLAUDE.md`.
+
+The files the index links to (`.claude/business/rules.md` and friends) are not
+auto-loaded by anything: they are plain markdown that Claude opens when a task
+leads it there. That is the point — cheap index always present, detail read on
+demand.
 
 **Output structure:**
 ```
-CLAUDE.md                    # Main index — auto-loaded by Claude Code, root of the repo
+CLAUDE.md                    # Main index — auto-loaded every session, at the repo root
 .claude/
 ├── business/
 │   ├── overview.md          # Purpose, users, success metrics
@@ -311,7 +317,7 @@ Note all links are relative to the repo root (`.claude/business/...`), not to `.
 - NEVER write placeholder text like `[Entity 1]` or `[Ex: ...]` in any output file. If you don't know something, ask.
 - NEVER skip Phase 1. Asking for information the code already has wastes the developer's time.
 - NEVER ask more than 4 questions in Phase 2.
-- NEVER create a `.claude/CLAUDE.md` file. The index always lives in the root `CLAUDE.md` — see "Why the root CLAUDE.md is the index" above. If a stray `.claude/CLAUDE.md` is found during Phase 1, its content must be merged into the root `CLAUDE.md` and the stray file deleted as part of this run.
+- NEVER create a `.claude/CLAUDE.md` file. Claude Code would load it too, giving the project two instruction files to keep in sync. The index always lives in the root `CLAUDE.md` — see "Why the root CLAUDE.md is the index" above. If a stray `.claude/CLAUDE.md` is found during Phase 1, its content must be merged into the root `CLAUDE.md` and the stray file deleted as part of this run.
 - If a root `CLAUDE.md` exists AND does NOT contain the phrase "Context not yet generated", treat it as real content: show it and ask "Context already exists — regenerate everything, update a specific file, or add a new domain?" A stub created by `init-project.sh` always contains that phrase — skip the prompt and proceed directly to Phase 1.
 - If the project has no `package.json` and no recognized structure, say so and ask what stack they're using before scanning further.
 - Domain files are generated only for entities found in the schema or models. Never invent entities.

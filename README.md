@@ -46,9 +46,13 @@ to `dotnet`.
 3. For a brand-new project, `/project-bootstrap` scaffolds the skeleton plus one
    vertical slice end to end.
 
-> The root `CLAUDE.md` is the index, not `.claude/CLAUDE.md`. Claude Code
-> auto-loads the repo-root file into every session; nothing inside `.claude/`
-> gets that treatment, so an index placed there is never guaranteed to be read.
+> The index lives in the root `CLAUDE.md`, not `.claude/CLAUDE.md`. Claude Code
+> auto-loads a project CLAUDE.md from either location, so the rule is not about
+> which one gets read — it is about keeping one file instead of two that drift
+> apart. The root is the convention and the one visible on clone.
+>
+> The files it links to (`.claude/business/*.md`, etc.) are read on demand, when
+> a task leads Claude to them.
 
 ## Tooling
 

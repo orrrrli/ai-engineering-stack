@@ -190,10 +190,10 @@ else
 fi
 
 # 9. Setup root CLAUDE.md as context index
-# Claude Code auto-loads the repo-root CLAUDE.md into every session — nothing
-# inside .claude/ gets that treatment, so the index must live here, not at
-# .claude/CLAUDE.md. If a root CLAUDE.md already exists (e.g. checked-in team
-# instructions), leave it untouched: /fill-context merges the index into it.
+# Claude Code auto-loads a project CLAUDE.md from ./CLAUDE.md OR ./.claude/CLAUDE.md.
+# Both work, so the index goes in the root to keep a single instruction file
+# rather than two that drift apart. If a root CLAUDE.md already exists (e.g.
+# checked-in team instructions), leave it untouched: /fill-context merges into it.
 if [ ! -f "CLAUDE.md" ]; then
     cat > "CLAUDE.md" <<EOF
 # $PROJECT_NAME — Claude Code Instructions
