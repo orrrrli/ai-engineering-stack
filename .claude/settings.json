@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .agents/CONTEXT.md ]; then echo '## Project Context (.agents/CONTEXT.md)'; echo ''; cat .agents/CONTEXT.md; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,8 +1,9 @@
 
 # AI Engineering Stack & Obsidian Brain
+.claude/commands
+.claude/agents
+.claude/settings.local.json
 .agents/
-.claude/
-docs/brain/
 docs/brain
 
 # Generated outputs
