@@ -133,7 +133,7 @@ the section if `fill-context` hasn't run recently enough to have it):
 - [Agent Triggers](.claude/engineering/agent-triggers.md) — when to delegate to a specialized subagent
 ```
 
-Print: "✅ Triggers written to `.claude/engineering/agent-triggers.md` and linked from the root CLAUDE.md."
+Print: "Triggers written to `.claude/engineering/agent-triggers.md` and linked from the root CLAUDE.md."
 
 ---
 

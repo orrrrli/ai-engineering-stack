@@ -58,15 +58,20 @@ Create a complete API route with:
 
 ## Best Practices to Follow
 
-- ✅ Early validation before expensive operations
-- ✅ Proper HTTP status codes (200, 201, 400, 401, 404, 500)
-- ✅ Consistent error response format
-- ✅ TypeScript strict mode
-- ✅ Minimal logic in routes (use services/utils)
-- ✅ Environment variable validation
-- ✅ Request/response logging for debugging
-- L No sensitive data in responses
-- L No database queries without validation
-- L No inline business logic (extract to services)
+**Do:**
+
+- Early validation before expensive operations
+- Proper HTTP status codes (200, 201, 400, 401, 404, 500)
+- Consistent error response format
+- TypeScript strict mode
+- Minimal logic in routes (use services/utils)
+- Environment variable validation
+- Request/response logging for debugging
+
+**Don't:**
+
+- Return sensitive data in responses
+- Run database queries without validation
+- Inline business logic in routes (extract to services)
 
 Generate production-ready code that I can immediately use in my Next.js project.

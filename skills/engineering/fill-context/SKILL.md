@@ -308,7 +308,7 @@ Note all links are relative to the repo root (`.claude/business/...`), not to `.
 2. Ask: "Does this look right? Anything to adjust before I write?"
 3. Wait for confirmation
 4. Write the root `CLAUDE.md` and all files to `.claude/`
-5. Print: "✅ Context built. [N] files written ([root CLAUDE.md merged/created] + N under `.claude/`)."
+5. Print: "Context built. [N] files written ([root CLAUDE.md merged/created] + N under `.claude/`)."
 
 ---
 

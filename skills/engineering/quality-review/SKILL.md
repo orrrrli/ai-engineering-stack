@@ -43,7 +43,7 @@ a choice the agent makes.
 
 **Step 2 — Task tool available AND `independent_gate3` ≠ false:**
 
-Announce: "⚡ Running code quality review (sub-agent)..."
+Announce: "Running code quality review (sub-agent)..."
 
 Spawn a sub-agent with the following prompt:
 
