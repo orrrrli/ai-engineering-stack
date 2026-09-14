@@ -17,7 +17,7 @@ for arg in "$@"; do
 done
 case "$STACK" in
     all|web|dotnet|android) ;;
-    *) echo "❌ Unknown stack '$STACK'. Use: all, web, dotnet, android"; exit 1 ;;
+    *) echo "ERROR: Unknown stack '$STACK'. Use: all, web, dotnet, android"; exit 1 ;;
 esac
 
 TARGET_DIR="${POSITIONAL[0]:-$(pwd)}"
@@ -86,16 +86,16 @@ link_stack_agents  ".claude/agents"
 # by definition, so it links wholesale.
 ln -s "$DOTNET_SKILLS_DIR/skills"  ".claude/commands/dotnet"
 ln -s "$DOTNET_SKILLS_DIR/recipes" ".claude/recipes"
-echo "✅ Linked $LINKED_SKILLS skills and $LINKED_AGENTS agents for stack '$STACK', plus the .NET skills repo"
+echo "OK: Linked $LINKED_SKILLS skills and $LINKED_AGENTS agents for stack '$STACK', plus the .NET skills repo"
 
 # 2. Setup CONTEXT.md in .agents
 if [ ! -f ".agents/CONTEXT.md" ]; then
     cp "$STACK_DIR/CONTEXT.template.md" ".agents/CONTEXT.md"
     # Mac OS requires an empty string for the backup extension in sed -i
     sed -i '' "s/\[Project Name\]/$PROJECT_NAME/g" ".agents/CONTEXT.md"
-    echo "✅ Created .agents/CONTEXT.md"
+    echo "OK: Created .agents/CONTEXT.md"
 else
-    echo "⚠️ .agents/CONTEXT.md already exists, skipping."
+    echo "WARNING: .agents/CONTEXT.md already exists, skipping."
 fi
 
 # 3. Setup Obsidian Persistent Memory
@@ -112,28 +112,28 @@ if [ ! -f "$OBSIDIAN_PROJ/Index.md" ]; then
 
 Welcome to the Obsidian Brain for **$PROJECT_NAME**. This space contains all persistent memory, architectural decisions, and deep context for the project.
 
-## 🏛️ Architecture Decision Records (ADR)
+## Architecture Decision Records (ADR)
 *(Add links to ADRs here)*
 
-## 📚 Technical Documentation
+## Technical Documentation
 *(Add technical docs here)*
 
-## 🐛 Bugs & Learnings
+## Bugs & Learnings
 *(Create new notes here when tricky bugs are resolved)*
 
 ---
 *Note for AI Agents: Always use \`[[wikilinks]]\` when creating new documents to link them back to this Index.*
 EOF
-    echo "✅ Created Obsidian Index.md"
+    echo "OK: Created Obsidian Index.md"
 else
-    echo "⚠️ Obsidian Index.md already exists, skipping."
+    echo "WARNING: Obsidian Index.md already exists, skipping."
 fi
 
 # 4. Setup docs/brain symlink
 mkdir -p docs
 rm -f docs/brain
 ln -s "$OBSIDIAN_PROJ" docs/brain
-echo "✅ Setup docs/brain symlink"
+echo "OK: Setup docs/brain symlink"
 
 # 5. Gitignore
 # Ignore only what is machine-local or a symlink into the stack. The context
@@ -151,7 +151,7 @@ GITIGNORE_ENTRIES=(
 
 if [ ! -f ".gitignore" ]; then
     touch ".gitignore"
-    echo "✅ Created .gitignore"
+    echo "OK: Created .gitignore"
 fi
 
 # Add header only if it doesn't exist
@@ -163,9 +163,9 @@ fi
 for entry in "${GITIGNORE_ENTRIES[@]}"; do
     if ! grep -q "^$entry" ".gitignore"; then
         echo "$entry" >> ".gitignore"
-        echo "✅ Added $entry to .gitignore"
+        echo "OK: Added $entry to .gitignore"
     else
-        echo "⚠️ $entry already in .gitignore, skipping."
+        echo "WARNING: $entry already in .gitignore, skipping."
     fi
 done
 # Clean up potential double newlines
@@ -175,7 +175,7 @@ sed -i '' '/^$/N;/^\n$/D' ".gitignore" 2>/dev/null || true
 # ".claude/" line, which keeps ignoring everything under it. Say so — the entries
 # added above cannot override it.
 if grep -qE '^\.claude/?$' ".gitignore"; then
-    echo "⚠️  .gitignore still has a bare '.claude/' entry — it ignores the whole"
+    echo "WARNING: .gitignore still has a bare '.claude/' entry — it ignores the whole"
     echo "    context tree. Remove that line so .claude/business, architecture,"
     echo "    domains and engineering get committed."
 fi
@@ -186,7 +186,7 @@ RULE_CONTENT="Always adhere to the global engineering standards defined in the s
 # General Agents Rules
 if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
     echo "$RULE_CONTENT" > ".agents/rules.md"
-    echo "✅ Created .agents/rules.md"
+    echo "OK: Created .agents/rules.md"
 fi
 
 # 7. Setup root CLAUDE.md
@@ -210,9 +210,9 @@ dotnet build         # Build project
 dotnet test          # Run tests
 \`\`\`
 EOF
-    echo "✅ Created CLAUDE.md"
+    echo "OK: Created CLAUDE.md"
 else
-    echo "⚠️ CLAUDE.md already exists, skipping."
+    echo "WARNING: CLAUDE.md already exists, skipping."
 fi
 
-echo "🎉 .NET Initialization complete for $PROJECT_NAME!"
+echo ".NET Initialization complete for $PROJECT_NAME!"
