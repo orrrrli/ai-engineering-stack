@@ -126,10 +126,14 @@ ln -s "$OBSIDIAN_PROJ" docs/brain
 echo "✅ Setup docs/brain symlink"
 
 # 5. Gitignore
+# Ignore only what is machine-local or a symlink into the stack. The context
+# tree (.claude/business, architecture, domains, engineering) and the root
+# CLAUDE.md are team-shared instructions and MUST stay in source control.
 GITIGNORE_ENTRIES=(
+    ".claude/commands"
+    ".claude/agents"
+    ".claude/settings.local.json"
     ".agents/"
-    ".claude/"
-    "docs/brain/"
     "docs/brain"
     "GEMINI.md"
 )
@@ -155,6 +159,15 @@ for entry in "${GITIGNORE_ENTRIES[@]}"; do
 done
 # Clean up potential double newlines
 sed -i '' '/^$/N;/^\n$/D' ".gitignore" 2>/dev/null || true
+
+# A project initialized before the context tree was versioned still has a bare
+# ".claude/" line, which keeps ignoring everything under it. Say so — the entries
+# added above cannot override it.
+if grep -qE '^\.claude/?$' ".gitignore"; then
+    echo "⚠️  .gitignore still has a bare '.claude/' entry — it ignores the whole"
+    echo "    context tree. Remove that line so .claude/business, architecture,"
+    echo "    domains and engineering get committed."
+fi
 
 # 6. Global & Editor Rules
 RULE_CONTENT="Always adhere to the global engineering standards defined in the symlinked AI stack, and read the root CLAUDE.md before proceeding. For deep architectural context, check docs/brain/Index.md."
