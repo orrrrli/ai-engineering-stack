@@ -143,6 +143,7 @@ GITIGNORE_ENTRIES=(
     ".agents/"
     "docs/brain"
     "graphify-out/"
+    "GEMINI.md"
 )
 
 if [ ! -f ".gitignore" ]; then
@@ -198,7 +199,17 @@ else
     echo "WARNING: .claude/settings.json already exists, skipping."
 fi
 
-# 8. Setup root CLAUDE.md as context index
+# 8. Setup GEMINI.md (auto-loaded by Gemini CLI, imports CLAUDE.md)
+if [ ! -f "GEMINI.md" ]; then
+    cat > "GEMINI.md" <<'EOF'
+@CLAUDE.md
+EOF
+    echo "OK: Created GEMINI.md"
+else
+    echo "WARNING: GEMINI.md already exists, skipping."
+fi
+
+# 9. Setup root CLAUDE.md as context index
 # Claude Code auto-loads a project CLAUDE.md from ./CLAUDE.md OR ./.claude/CLAUDE.md.
 # Both work; the root keeps it to a single instruction file, and it is the convention.
 if [ ! -f "CLAUDE.md" ]; then
