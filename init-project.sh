@@ -102,13 +102,13 @@ if [ ! -f "$OBSIDIAN_PROJ/Index.md" ]; then
 
 Welcome to the Obsidian Brain for **$PROJECT_NAME**. This space contains all persistent memory, architectural decisions, and deep context for the project.
 
-## Architecture Decision Records (ADR)
+## 🏛️ Architecture Decision Records (ADR)
 *(Add links to ADRs here)*
 
-## Technical Documentation
+## 📚 Technical Documentation
 *(Add technical docs here)*
 
-## Bugs & Learnings
+## 🐛 Bugs & Learnings
 *(Create new notes here when tricky bugs are resolved)*
 
 ---
