@@ -1,1 +1,0 @@
-/Users/orla/dev/ai-engineering-stack/skills/productivity/grill-me/SKILL.md

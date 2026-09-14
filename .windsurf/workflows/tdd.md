@@ -1,1 +1,0 @@
-/Users/orla/dev/ai-engineering-stack/skills/engineering/tdd/SKILL.md

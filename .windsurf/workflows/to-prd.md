@@ -1,1 +1,0 @@
-/Users/orla/dev/ai-engineering-stack/skills/engineering/to-prd/SKILL.md

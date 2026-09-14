@@ -6,6 +6,11 @@
 .agents/
 docs/brain
 
+# Other editors — this stack targets Claude Code only. Kept on disk,
+# out of the repo, so the README's "support was removed" claim holds.
+.opencode/
+.windsurf/
+
 # Generated outputs
 graphify-out/
 skills/**/.state.json

@@ -1,1 +1,0 @@
-/Users/orla/dev/ai-engineering-stack/skills/api/api-new/SKILL.md
