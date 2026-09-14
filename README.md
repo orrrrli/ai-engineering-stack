@@ -46,6 +46,26 @@ to `dotnet`.
 3. For a brand-new project, `/project-bootstrap` scaffolds the skeleton plus one
    vertical slice end to end.
 
+### What gets committed
+
+The context tree is team-shared instructions, so it belongs in source control.
+The generated `.gitignore` excludes only what is machine-local or a symlink
+into this stack:
+
+| Committed | Ignored |
+|-----------|---------|
+| `CLAUDE.md` | `.claude/commands` (symlink) |
+| `.claude/business/`, `architecture/`, `domains/`, `engineering/` | `.claude/agents` (symlink) |
+| `.claude/settings.json` | `.claude/settings.local.json` |
+| | `docs/brain` (symlink to the Obsidian vault) |
+
+> [!IMPORTANT]
+> Projects initialized before this change have a bare `.claude/` line in their
+> `.gitignore`, which keeps the whole tree out of git. The init script detects it
+> and tells you, but cannot fix it — a `.gitignore` entry added later cannot
+> override a broader one already there. Remove the `.claude/` line by hand, then
+> `git add .claude`.
+
 > The index lives in the root `CLAUDE.md`, not `.claude/CLAUDE.md`. Claude Code
 > auto-loads a project CLAUDE.md from either location, so the rule is not about
 > which one gets read — it is about keeping one file instead of two that drift
