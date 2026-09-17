@@ -104,18 +104,18 @@ docs and media. Keep `graphify-out/` out of version control.
 
 ## Skills
 
-42 skills across 7 categories. Each category directory has its own README with
+30 skills across 6 categories. Each category directory has its own README with
 one-line descriptions.
 
-### `engineering/` (18)
+### `engineering/` (14)
 Layer audits per stack — **audit-layer-boundaries** (web), **dotnet-clean-architecture**,
 **android-clean-architecture** — plus **sdd-apply**, **prd-to-github-backlog**,
 **project-bootstrap**, **fill-context**, **fill-triggers**, **tdd**, **diagnose**,
 **quality-review**, **grill-with-docs**, **improve-codebase-architecture**,
-**prompt-rewrite**, **to-issues**, **to-prd**, **triage**, **zoom-out**.
+**prompt-rewrite**.
 
-### `api/` (4)
-**api-new**, **api-protect**, **api-test**, **adapt-endpoint**.
+### `api/` (3)
+**api-new**, **api-protect**, **api-test**.
 
 ### `ui/` (4)
 **component-new**, **component-adapt**, **page-new**, **responsive-audit**.
@@ -123,8 +123,8 @@ Layer audits per stack — **audit-layer-boundaries** (web), **dotnet-clean-arch
 ### `productivity/` (6)
 **ponytail**, **caveman**, **grill-me**, **handoff**, **project-workflows**, **write-a-skill**.
 
-### `misc/` (8), `personal/` (1), `learning/` (1)
-See [misc/README.md](./skills/misc/README.md), [personal/README.md](./skills/personal/README.md), and `learning/explain`.
+### `misc/` (2), `personal/` (1)
+See [misc/README.md](./skills/misc/README.md) and [personal/README.md](./skills/personal/README.md).
 
 ## Agents
 

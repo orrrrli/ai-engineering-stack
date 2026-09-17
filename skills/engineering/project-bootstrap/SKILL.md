@@ -177,7 +177,7 @@ and the verify results. Then stop — **do not implement further features.**
 Point the developer at:
 - Normal prompting or `sdd-apply` for the next feature, following the slice's
   pattern
-- `to-issues` / `to-prd` if they want the remaining work turned into tracked
+- `prd-to-github-backlog` if they want the remaining work turned into tracked
   issues first
 
 ---

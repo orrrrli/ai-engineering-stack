@@ -27,11 +27,10 @@ Each entry shows: persona to activate → skill chain to follow → domain conte
 |------|------|-------------|
 | 1 | `/grill-me` | Claude interviews you until the feature is unambiguous |
 | 2 | `[requirements-analyst]` | Shapes stories around your domain model |
-| 3 | `/to-prd` | Publishes the PRD to your issue tracker |
-| 4 | `/to-issues` | Breaks it into independently-grabbable tasks |
-| 5 | `[backend-architect]` + `/api-new` | Scaffolds route with validation and auth |
-| 6 | `[frontend-architect]` + `/page-new` | Wires the UI |
-| 7 | `/lint` | Final pass before opening the PR |
+| 3 | `/prd-to-github-backlog` | Publishes the PRD and breaks it into epics, stories and tasks |
+| 4 | `[backend-architect]` + `/api-new` | Scaffolds route with validation and auth |
+| 5 | `[frontend-architect]` + `/page-new` | Wires the UI |
+| 6 | `/quality-review` | Final pass before opening the PR |
 
 **Domain note:** {one sentence about what makes this specific to the project, e.g. "API routes must use the Prisma client from `lib/db.ts`, not a new instance."}
 
@@ -59,7 +58,7 @@ Each entry shows: persona to activate → skill chain to follow → domain conte
 | 1 | `[mobile-ui-expert]` | Audits touch targets, overflow, stacking |
 | 2 | `/responsive-audit` | Systematic check across breakpoints |
 | 3 | `[frontend-architect]` | Applies fixes |
-| 4 | `/code-cleanup` | Removes dead Tailwind classes and duplicate logic |
+| 4 | `/quality-review` | Flags dead Tailwind classes and duplicate logic |
 
 **Domain note:** {e.g. "Client portal pages must work at 320px — clients often use mobile."}
 
@@ -73,7 +72,7 @@ Each entry shows: persona to activate → skill chain to follow → domain conte
 | 1 | `/diagnose` | Reproduce → minimise → hypothesise → verify |
 | 2 | `/tdd` | Write failing test first, then fix, then refactor |
 | 3 | `[refactoring-expert]` | Reviews surrounding code for related smells |
-| 4 | `/code-cleanup` | Final pass before the PR |
+| 4 | `/quality-review` | Final pass before the PR |
 
 **Domain note:** {e.g. "Run `npm run seed` before diagnosing data-related bugs — the local DB is often stale."}
 

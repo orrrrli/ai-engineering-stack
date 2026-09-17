@@ -6,7 +6,7 @@ them into a project. There is no application here — it is markdown and bash.
 ## Layout
 
 ```
-skills/<category>/<name>/SKILL.md   42 skills across 7 categories
+skills/<category>/<name>/SKILL.md   30 skills across 6 categories
 agents/<name>.md                    12 subagents
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
