@@ -401,6 +401,14 @@ def main():
         r = issue_repo or repo
         rec = state.get(key)
         if rec and rec.get("number"):
+            if not args.dry_run and rec.get("title") != title:
+                print(f"  ~ {key}: title -> {title[:70]}", flush=True)
+                gh_retry(["gh", "api", "--method", "PATCH",
+                          f"repos/{r}/issues/{rec['number']}", "--input", "-"],
+                         stdin=json.dumps({"title": title}))
+                time.sleep(LINK_SLEEP)
+                rec["title"] = title
+                state[key] = rec; save()
             return rec
         if args.dry_run:
             print(f"  + {key}: {title[:70]}")

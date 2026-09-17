@@ -47,7 +47,7 @@ derived docs or GitHub — change the manifest and re-run.
                               // Use when backend/frontend stories live in separate repositories.
                               // Cross-repo sub-issue linking is skipped (GitHub doesn't support it).
   "estimate": "M",            // XS|S|M|L|XL (mapped to points S=2,M=3,L=5,XS=1,XL=8)
-  "title": "As a user, I want ... so that ...",   // user-story sentence
+  "title": "Add provider sign-in",   // short imperative phrase (≤ ~60 chars); intent goes in acceptance_criteria
   "acceptance_criteria": ["Given ..., When ..., Then ..."],
   "screens": ["ON-3", "ON-4"],   // optional — UX screen IDs this delivers
   "depends_on": ["BE-FOUND-2"],  // optional — story ids

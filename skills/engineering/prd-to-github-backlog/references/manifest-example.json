@@ -20,7 +20,7 @@
           "id": "BE-FOUND-1",
           "area": "backend",
           "estimate": "M",
-          "title": "As the team, I want a versioned schema + migrations so every feature has a correct data layer.",
+          "title": "Versioned schema + migrations",
           "acceptance_criteria": [
             "Given migrations run on a clean DB, When applied, Then all tables and indexes exist."
           ],
@@ -36,7 +36,7 @@
           "id": "OPS-FOUND-1",
           "area": "devops",
           "estimate": "L",
-          "title": "As the team, I want CI/CD + environments so builds are reproducible.",
+          "title": "CI/CD + environments",
           "acceptance_criteria": [
             "Given a push to main, When the pipeline runs, Then it lints, tests, and builds."
           ],
@@ -59,7 +59,7 @@
           "id": "BE-AUTH-1",
           "area": "backend",
           "estimate": "M",
-          "title": "As the system, I want providers wired so any sign-in creates a profile.",
+          "title": "Wire providers + profile bootstrap",
           "acceptance_criteria": ["Given a new user, When auth succeeds, Then a profile row exists."],
           "screens": [],
           "depends_on": ["BE-FOUND-1"],
@@ -69,7 +69,7 @@
           "id": "FE-AUTH-1",
           "area": "frontend",
           "estimate": "M",
-          "title": "As a new user, I want clean auth screens so I can sign in fast.",
+          "title": "Auth screens (splash + sign-in)",
           "acceptance_criteria": ["Given a valid session, When the app loads, Then it routes home."],
           "screens": ["ON-1", "ON-2"],
           "depends_on": [],
@@ -79,7 +79,7 @@
           "id": "UX-AUTH-1",
           "area": "design",
           "estimate": "S",
-          "title": "As a new user, I want clear auth screens designed so sign-in feels trustworthy.",
+          "title": "Design auth + home screens",
           "acceptance_criteria": ["Given the auth flow, When designed, Then ON-1/ON-2 are speced with states."],
           "screens": ["ON-1", "ON-2", "HM-1"],
           "depends_on": [],
@@ -89,7 +89,7 @@
           "id": "SEC-AUTH-1",
           "area": "security",
           "estimate": "S",
-          "title": "As the security owner, I want auth hardened so tokens can't be abused.",
+          "title": "Harden auth (tokens + rate-limiting)",
           "acceptance_criteria": ["Given the auth endpoints, When hit repeatedly, Then rate limiting blocks abuse."],
           "screens": [],
           "depends_on": ["BE-AUTH-1"],

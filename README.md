@@ -107,12 +107,12 @@ docs and media. Keep `graphify-out/` out of version control.
 30 skills across 6 categories. Each category directory has its own README with
 one-line descriptions.
 
-### `engineering/` (14)
+### `engineering/` (15)
 Layer audits per stack — **audit-layer-boundaries** (web), **dotnet-clean-architecture**,
 **android-clean-architecture** — plus **sdd-apply**, **prd-to-github-backlog**,
 **project-bootstrap**, **fill-context**, **fill-triggers**, **tdd**, **diagnose**,
 **quality-review**, **grill-with-docs**, **improve-codebase-architecture**,
-**prompt-rewrite**.
+**prompt-rewrite**, **sdd-verify**.
 
 ### `api/` (3)
 **api-new**, **api-protect**, **api-test**.
@@ -120,8 +120,10 @@ Layer audits per stack — **audit-layer-boundaries** (web), **dotnet-clean-arch
 ### `ui/` (4)
 **component-new**, **component-adapt**, **page-new**, **responsive-audit**.
 
-### `productivity/` (6)
-**ponytail**, **caveman**, **grill-me**, **handoff**, **project-workflows**, **write-a-skill**.
+### `productivity/` (5)
+**caveman**, **grill-me**, **handoff**, **project-workflows**, **write-a-skill**.
+
+`ponytail` is no longer vendored here — it is installed as a Claude Code plugin.
 
 ### `misc/` (2), `personal/` (1)
 See [misc/README.md](./skills/misc/README.md) and [personal/README.md](./skills/personal/README.md).

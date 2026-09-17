@@ -49,8 +49,9 @@ Write `manifest.json` per `references/manifest-schema.md`. Methodology:
 - **Epics by feature / FR**, each tagged with its `phase` and a `size` (S/M/L) and `sprint`.
 - Each feature epic gets **backend + frontend** stories; add **design (UX/UI)**, **QA**, and **security**
   stories where there's real work; put **devops** on the foundation + launch epics.
-- Stories are user-story sentences ("As a … I want … so that …") with **Given/When/Then** acceptance
-  criteria and an `estimate` (XS–XL → points 1/2/3/5/8). Cite real screen IDs / workflow IDs / NFR targets.
+- **Story titles are short imperative phrases** (≤ ~60 chars, e.g. "Add HasAscvd + pregnancy dates to Patient"). The full user-story intent lives in the
+  **Given/When/Then** acceptance criteria — do not put "As a … I want … so that …" in the title, it makes issue names unreadable. Epics and tasks are
+  already short imperative / noun phrases; keep them so. Stories carry an `estimate` (XS–XL → points 1/2/3/5/8). Cite real screen IDs / workflow IDs / NFR targets.
 - Tasks are short imperative strings (auto-numbered `<story-id>-T<k>`).
 - If using **multi-repo**, add `"repo": "owner/name"` to stories that live outside the global repo
   (e.g. frontend stories in the app repo). Tasks inherit their parent story's repo.
@@ -99,7 +100,8 @@ with the user before any push** to a shared remote.
 ## Hard-won gotchas (baked into the scripts)
 
 - **Resumable, never re-create:** `.state.json` (next to the manifest) is the ledger; re-running skips done
-  work and reconciles missing links/fields. Keep it **gitignored**. A network reset mid-run is retried.
+  work and reconciles missing links/fields **and titles** (edit a story `title` in the manifest, re-run, and
+  the live issue is renamed via PATCH). Keep `.state.json` **gitignored**. A network reset mid-run is retried.
 - **Sub-issue linking** uses `POST /repos/{owner}/{repo}/issues/{parent}/sub_issues` with the child's
   **numeric id** (not its number). Limits: 100 sub-issues/parent, 8 nesting levels.
 - **Project field values** are set via `updateProjectV2ItemFieldValue`. Single-select option ids must be
