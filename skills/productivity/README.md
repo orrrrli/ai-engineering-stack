@@ -10,4 +10,3 @@ drifts from upstream. `sdd-apply` and `project-bootstrap` still invoke it.
 - **[grill-me](./grill-me/SKILL.md)** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
 - **[handoff](./handoff/SKILL.md)** — Compact the current conversation into a handoff document another agent can pick up from.
 - **[project-workflows](./project-workflows/SKILL.md)** — Generate a project-specific WORKFLOWS.md mapping named slash-command chains to the agents and skills that fit that stack.
-- **[write-a-skill](./write-a-skill/SKILL.md)** — Create new skills with proper structure, progressive disclosure, and bundled resources.

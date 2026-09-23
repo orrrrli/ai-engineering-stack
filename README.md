@@ -24,14 +24,14 @@ context tree, the gitignore entries, and the Obsidian bridge in one pass.
 
 Every skill and agent declares a `stacks:` field in its frontmatter, and the init
 script links only the matching ones. An Android project has no use for
-`page-new`, and a .NET project has none for `mobile-ui-expert`.
+`audit-layer-boundaries`, and a .NET project has none for `mobile-ui-expert`.
 
 | `--stack` | skills | agents |
 |-----------|--------|--------|
-| `web`     | 39 | 11 |
-| `dotnet`  | 30 | 10 |
-| `android` | 30 | 10 |
-| `all`     | 42 | 12 |
+| `web`     | 17 | 11 |
+| `dotnet`  | 18 | 10 |
+| `android` | 18 | 10 |
+| `all`     | 20 | 12 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
 to `dotnet`.
@@ -104,28 +104,22 @@ docs and media. Keep `graphify-out/` out of version control.
 
 ## Skills
 
-30 skills across 6 categories. Each category directory has its own README with
+20 skills across 4 categories. Each category directory has its own README with
 one-line descriptions.
 
-### `engineering/` (15)
+### `engineering/` (14)
 Layer audits per stack — **audit-layer-boundaries** (web), **dotnet-clean-architecture**,
 **android-clean-architecture** — plus **sdd-apply**, **prd-to-github-backlog**,
 **project-bootstrap**, **fill-context**, **fill-triggers**, **tdd**, **diagnose**,
-**quality-review**, **grill-with-docs**, **improve-codebase-architecture**,
+**grill-with-docs**, **improve-codebase-architecture**,
 **prompt-rewrite**, **sdd-verify**.
 
-### `api/` (3)
-**api-new**, **api-protect**, **api-test**.
-
-### `ui/` (4)
-**component-new**, **component-adapt**, **page-new**, **responsive-audit**.
-
-### `productivity/` (5)
-**caveman**, **grill-me**, **handoff**, **project-workflows**, **write-a-skill**.
+### `productivity/` (4)
+**caveman**, **grill-me**, **handoff**, **project-workflows**.
 
 `ponytail` is no longer vendored here — it is installed as a Claude Code plugin.
 
-### `misc/` (2), `personal/` (1)
+### `misc/` (1), `personal/` (1)
 See [misc/README.md](./skills/misc/README.md) and [personal/README.md](./skills/personal/README.md).
 
 ## Agents

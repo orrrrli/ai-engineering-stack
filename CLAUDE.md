@@ -6,7 +6,7 @@ them into a project. There is no application here — it is markdown and bash.
 ## Layout
 
 ```
-skills/<category>/<name>/SKILL.md   30 skills across 6 categories
+skills/<category>/<name>/SKILL.md   20 skills across 4 categories
 agents/<name>.md                    12 subagents
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
@@ -33,7 +33,7 @@ and clean up after.
 
 **Every skill and agent declares `stacks:` in its frontmatter.** The init
 scripts read it and link only what matches `--stack`, so a .NET project does
-not receive `page-new`. Valid values: `all`, `web`, `dotnet`, `android`. `all`
+not receive `audit-layer-boundaries`. Valid values: `all`, `web`, `dotnet`, `android`. `all`
 is exclusive — never combine it with another value.
 
 ```yaml
