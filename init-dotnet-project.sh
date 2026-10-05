@@ -106,7 +106,7 @@ mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR" || { echo "Failed to cd to $TARGET_DIR"; exit 1; }
 
 # 1. Setup Claude Code symlinks
-mkdir -p .claude .agents
+mkdir -p .claude
 
 # Remove old links, including names used before the Claude-Code-only migration.
 # .claude/agents held per-project agent links; agents now live at user level (install-global.sh).
@@ -144,9 +144,7 @@ GITIGNORE_ENTRIES=(
     ".claude/commands/dotnet"
     ".claude/recipes"
     ".claude/settings.local.json"
-    ".agents/"
     "graphify-out/"
-    "GEMINI.md"
     "${STACK_SKILLS[@]}"
 )
 
@@ -187,15 +185,6 @@ if grep -qE '^\.claude/?$' ".gitignore"; then
     echo "    domains and engineering get committed."
 fi
 
-# 6. Global & Editor Rules
-RULE_CONTENT="Always adhere to the global engineering standards defined in the symlinked AI stack, and read the root CLAUDE.md before proceeding. Note: This project uses .NET Clean Architecture skills and recipes."
-
-# General Agents Rules
-if [ -d ".agents" ] && [ ! -f ".agents/rules.md" ]; then
-    echo "$RULE_CONTENT" > ".agents/rules.md"
-    echo "OK: Created .agents/rules.md"
-fi
-
 # 7. Setup Claude Code settings.json
 # Claude Code auto-loads the root CLAUDE.md natively — no hook needed for context
 if [ ! -f ".claude/settings.json" ]; then
@@ -207,16 +196,6 @@ EOF
     echo "OK: Created .claude/settings.json"
 else
     echo "WARNING: .claude/settings.json already exists, skipping."
-fi
-
-# 8. Setup GEMINI.md (auto-loaded by Gemini CLI, imports CLAUDE.md)
-if [ ! -f "GEMINI.md" ]; then
-    cat > "GEMINI.md" <<'EOF'
-@CLAUDE.md
-EOF
-    echo "OK: Created GEMINI.md"
-else
-    echo "WARNING: GEMINI.md already exists, skipping."
 fi
 
 # 9. Setup root CLAUDE.md as context index
