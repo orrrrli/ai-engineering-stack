@@ -91,7 +91,7 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **grill-me** | all | Interviews you about a plan until every branch is resolved | mattpocock/skills |
 | **handoff** | all | Session handoff document, copied to the clipboard | Own |
 | **caveman** | all | Ultra-compressed replies, ~75% fewer tokens | JuliusBrussee/caveman |
-| **git-guardrails-claude-code** | all | Hooks that block destructive git commands. Not used (see Guardrails) | mattpocock/skills |
+| **git-guardrails-claude-code** | all | Opt-in PreToolUse hook that blocks destructive git commands. Needs jq; tested on macOS only. Not used here (see Guardrails) | mattpocock/skills |
 
 `ponytail` is no longer vendored here. It is installed as a Claude Code plugin.
 
@@ -137,8 +137,9 @@ Known gaps:
   blocked; the risk is accepted.
 - Bash rules match the start of the command text. Every rule needs a `git -C`
   variant, because the agent is told to use `git -C` instead of `cd`.
-- `skills/misc/git-guardrails-claude-code` is not used: it blocks every
-  `git push`, which `sdd-apply` needs to open PRs.
+- `skills/misc/git-guardrails-claude-code` is not used here: it blocks every
+  `git push`, which `sdd-apply` needs to open PRs. It stays as the opt-in
+  standard for setups that want a hard block instead of ask rules.
 
 ## Per-project installation
 
@@ -277,8 +278,8 @@ Pending, in order:
 
 Small cleanups:
 
-- Remove `skills/misc/git-guardrails-claude-code`: it blocks every `git push`,
-  which `sdd-apply` needs, so it is not used (see Guardrails).
+- Linux and Windows support for the init scripts, statusline and hooks:
+  issue #3.
 - Decide whether the commit-msg hook accepts a `release:` type. Today it
   rejects it.
 - Repos that use husky skip the stack hook (init leaves `core.hooksPath`
