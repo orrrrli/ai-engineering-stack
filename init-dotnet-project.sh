@@ -2,7 +2,7 @@
 
 # Resolves the absolute path to the directory containing this script
 STACK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTNET_SKILLS_DIR="$HOME/dev/dotnet-clean-architecture-skills"
+DOTNET_SKILLS_DIR="$HOME/dev/oss/dotnet-clean-architecture-skills"
 # Parse args: optional target dir, plus --stack=all|web|dotnet|android
 STACK="dotnet"
 POSITIONAL=()
@@ -152,6 +152,9 @@ if [ ! -f ".gitignore" ]; then
     touch ".gitignore"
     echo "OK: Created .gitignore"
 fi
+
+# Without a final newline, the first append would glue onto the user's last line.
+[ -n "$(tail -c1 .gitignore)" ] && echo >> ".gitignore"
 
 # Add header only if it doesn't exist
 HEADER="# AI Engineering Stack"

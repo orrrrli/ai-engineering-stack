@@ -140,6 +140,9 @@ if [ ! -f ".gitignore" ]; then
     echo "OK: Created .gitignore"
 fi
 
+# Without a final newline, the first append would glue onto the user's last line.
+[ -n "$(tail -c1 .gitignore)" ] && echo >> ".gitignore"
+
 # Add header only if it doesn't exist
 HEADER="# AI Engineering Stack"
 if ! grep -q "$HEADER" ".gitignore"; then
