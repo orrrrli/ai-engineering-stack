@@ -9,3 +9,4 @@ drifts from upstream. `sdd-apply` and `project-bootstrap` still invoke it.
 - **[caveman](./caveman/SKILL.md)** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping full technical accuracy.
 - **[grill-me](./grill-me/SKILL.md)** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
 - **[handoff](./handoff/SKILL.md)** — Compact the current conversation into a handoff document another agent can pick up from.
+- **[blind-pick](./blind-pick/SKILL.md)** — Make the options for a hard-to-reverse decision argue and attack each other, then let three judges pick a winner without knowing which option was recommended.
