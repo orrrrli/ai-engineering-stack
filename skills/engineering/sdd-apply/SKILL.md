@@ -311,17 +311,11 @@ Rules:
    ```bash
    gh pr create --repo <owner/repo> --base <BASE> --head feat/<STORY_ID> \
      --title "<STORY_ID>: <story title>" \
-     --body "$(cat <<'EOF'
-   Implements Story #<story#> (<STORY_ID>).
-
-   Tasks completed:
-   - Closes #<task#> — <TASK_ID>: <summary>
-   - ...
-
-   <one-line note on any skipped/failed task, if applicable>
-   EOF
-   )"
+     --body-file <scratchpad>/pr.md
    ```
+   Write `pr.md` per `~/.claude/workflows.md` "Pull Requests". `## What` names Story #<story#>
+   (<STORY_ID>) and ends with one `Closes #<task#>` line per task. A skipped or failed task goes
+   under `## Not changed`.
    Do NOT add a Claude/AI co-author or generated-by trailer to the PR.
 
 3. Report done: the PR URL, the list of tasks committed/closed, and anything skipped or left for a
