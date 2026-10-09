@@ -6,8 +6,8 @@ them into a project. There is no application here — it is markdown and bash.
 ## Layout
 
 ```
-skills/<category>/<name>/SKILL.md   17 skills across 4 categories
-global/agents/<name>.md             7-agent team, user-level (all projects)
+skills/<category>/<name>/SKILL.md   16 skills across 3 categories
+global/agents/<name>.md             6-agent team, user-level (all projects)
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
 install-global.sh                   user-level setup, once per machine
@@ -61,7 +61,7 @@ machine gets the whole team.
 reintroduce `.windsurf/`, `.opencode/` or their rules files.
 
 **Category READMEs must match the directory.** `skills/engineering/`,
-`productivity/`, `ui/` and `misc/` each have a README listing their skills. Adding or removing a
+`productivity/` and `misc/` each have a README listing their skills. Adding or removing a
 skill means updating it in the same commit.
 
 ## Context
@@ -70,4 +70,4 @@ This repo has no `.claude/` context tree — `/fill-context` has never run here,
 and for a repo this small the file you are reading is the whole context.
 
 Project-level docs: `README.md` (installation and inventory),
-`PERSISTENT-MEMORY.md` (claude-mem + engram), `DESIGN-PIPELINE.md` (setting up `/design-loop`).
+`PERSISTENT-MEMORY.md` (claude-mem + engram).

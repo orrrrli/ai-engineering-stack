@@ -1,6 +1,6 @@
 # AI Engineering Stack
 
-A personal Claude Code harness: a 7-agent team, 17 skills and the scripts that
+A personal Claude Code harness: a 6-agent team, 16 skills and the scripts that
 wire them into any project. Clone it once, run one script per machine and one
 per project, and every Claude Code session works the same way, with the same
 rules, the same reviewers and the same delivery loop.
@@ -63,14 +63,12 @@ dispatches the rest as subagents: one prompt in, one report back.
 | **security-auditor** | Read-only. Critical/high issues on auth and untrusted input |
 | **debugger** | Root cause of a failing test or wrong behavior, minimal fix |
 | **test-writer** | Behavioral tests in the project's existing framework |
-| **design-auditor** | Read-only. Audits iOS screens (PNGs + tokens) for design-loop: Nielsen, HIG, computed contrast |
 
 ### Skills
 
-17 skills across 4 categories. Each category directory has its own README:
+16 skills across 3 categories. Each category directory has its own README:
 [engineering](./skills/engineering/README.md),
-[productivity](./skills/productivity/README.md),
-[ui](./skills/ui/README.md), [misc](./skills/misc/README.md).
+[productivity](./skills/productivity/README.md), [misc](./skills/misc/README.md).
 The **Origin** column is detailed in [Credits and sources](#credits-and-sources).
 
 | Skill | Stacks | What it does | Origin |
@@ -87,7 +85,6 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **dotnet-clean-architecture** | dotnet | Scans a .NET Clean Architecture solution for dependency-rule violations | Own |
 | **android-clean-architecture** | android | Clean Architecture patterns and a layer scan for Android/KMP | Own |
 | **project-bootstrap** | dotnet, android | Skeleton plus one vertical slice end to end | Own |
-| **design-loop** | ios | Claude Design style loop for screens: variants, iterate, audit, apply. Setup: [DESIGN-PIPELINE.md](./DESIGN-PIPELINE.md) | Own, rules adapted |
 | **grill-me** | all | Interviews you about a plan until every branch is resolved | mattpocock/skills |
 | **handoff** | all | Session handoff document, copied to the clipboard | Own |
 | **caveman** | all | Ultra-compressed replies, ~75% fewer tokens | JuliusBrussee/caveman |
@@ -171,8 +168,8 @@ script links only the matching ones. An Android project has no use for
 | `web`     | 13 |
 | `dotnet`  | 14 |
 | `android` | 14 |
-| `ios`     | 13 |
-| `all`     | 17 |
+| `ios`     | 12 |
+| `all`     | 16 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
 to `dotnet`.
@@ -247,7 +244,7 @@ replaces another.
 | **[engram](https://github.com/Gentleman-Programming/engram)** | 3.0 | Memory for subagents. `code-reviewer`, `debugger` and `security-auditor` search it before working and save confirmed findings through MCP (`mem_search`, `mem_save`), since it can't write files and claude-mem is read-only to subagents. |
 | **[ego-browser](https://github.com/citrolabs/ego-lite)** | 2.0 | Browser for agents (ego lite app + skill, macOS). `sdd-verify` uses it in web projects to check acceptance criteria that are visible in the UI; without it those criteria stay `~ PARTIAL`. Install: `npx skills add citrolabs/ego-lite -g -a claude-code`. |
 | **[graphify](https://github.com/Graphify-Labs/graphify)** | 0.8 | Turns a codebase into a queryable knowledge graph — tree-sitter AST parsing across 37 languages, plus docs, SQL and PDFs. Ask `graphify query "..."` instead of grepping; `path A B` traces how two things connect, `affected X` finds what a change breaks. |
-| **[ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** | 2.13 | Local design database (font pairings, palettes, UX rules, SwiftUI guidelines) with a stdlib-only Python search script. `design-loop` calls its `--domain` lookups in the design phase; without it the loop runs and skips them. Install as a plugin, one command at a time: `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill`, then `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill`. |
+| **[ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** | 2.13 | Local design database (font pairings, palettes, UX rules, SwiftUI guidelines) with a stdlib-only Python search script. Install as a plugin, one command at a time: `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill`, then `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill`. |
 
 `rtk` trims what the tools send; `headroom` trims what reaches the model;
 `claude-mem` remembers the main session; `engram` remembers what subagents
@@ -305,7 +302,6 @@ structure; adapted ones say in their own file what changed and why.
 | [NeoLabHQ/context-engineering-kit](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/agents) | `global/agents/` | Role split and reviewer discipline (architect, business-analyst, code-reviewer, security-auditor). Left out its threat prompting and its developer/tech-lead split. Details in `software-architect.md` |
 | [rubentanahara/claude-code-config-devtalk](https://github.com/rubentanahara/claude-code-config-devtalk) | `prompt-rewrite` | Skill structure, minus two rules that conflict with Anthropic's docs |
 | [Anthropic prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) | `prompt-rewrite`, all agents | The rules every prompt is checked against |
-| [wondelai/skills](https://github.com/wondelai/skills), [ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), Apple HIG, [WCAG 2.1](https://www.w3.org/TR/WCAG21/) | `design-loop`, `design-auditor` | Audit rules rewritten for iOS. Full table, with what was left out and why: [skills/ui/README.md](./skills/ui/README.md#sources) |
 | John Ousterhout, *A Philosophy of Software Design* | `improve-codebase-architecture` | "Design It Twice" for exploring alternative interfaces |
 
 ### Tools
@@ -324,8 +320,7 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | `install-global.sh` | User-level setup, once per machine |
 | `init-project.sh` | Project setup, `--stack` aware |
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
-| `global/agents/` | The 7-agent team |
+| `global/agents/` | The 6-agent team |
 | `global/githooks/commit-msg` | Commit message hook, referenced via `core.hooksPath` |
 | `global-rules.md` | Global engineering standards |
 | `PERSISTENT-MEMORY.md` | claude-mem + engram memory guide |
-| `DESIGN-PIPELINE.md` | Setting up `/design-loop` in a project: OpenPencil, fonts, pipeline keys |
