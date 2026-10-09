@@ -87,6 +87,7 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **project-bootstrap** | dotnet, android | Skeleton plus one vertical slice end to end | Own |
 | **grill-me** | all | Interviews you about a plan until every branch is resolved | mattpocock/skills |
 | **handoff** | all | Session handoff document, copied to the clipboard | Own |
+| **blind-pick** | all | Options for a hard-to-reverse decision argue against each other; blind judges pick the winner | Own |
 | **caveman** | all | Ultra-compressed replies, ~75% fewer tokens | JuliusBrussee/caveman |
 | **git-guardrails-claude-code** | all | Opt-in PreToolUse hook that blocks destructive git commands. Needs jq; tested on macOS only. Not used here (see Guardrails) | mattpocock/skills |
 
