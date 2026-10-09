@@ -1,6 +1,6 @@
 # AI Engineering Stack
 
-A personal Claude Code harness: a 6-agent team, 16 skills and the scripts that
+A personal Claude Code harness: a 6-agent team, 17 skills and the scripts that
 wire them into any project. Clone it once, run one script per machine and one
 per project, and every Claude Code session works the same way, with the same
 rules, the same reviewers and the same delivery loop.
@@ -66,7 +66,7 @@ dispatches the rest as subagents: one prompt in, one report back.
 
 ### Skills
 
-16 skills across 3 categories. Each category directory has its own README:
+17 skills across 3 categories. Each category directory has its own README:
 [engineering](./skills/engineering/README.md),
 [productivity](./skills/productivity/README.md), [misc](./skills/misc/README.md).
 The **Origin** column is detailed in [Credits and sources](#credits-and-sources).
@@ -165,11 +165,11 @@ script links only the matching ones. An Android project has no use for
 
 | `--stack` | skills |
 |-----------|--------|
-| `web`     | 13 |
-| `dotnet`  | 14 |
-| `android` | 14 |
-| `ios`     | 12 |
-| `all`     | 16 |
+| `web`     | 14 |
+| `dotnet`  | 15 |
+| `android` | 15 |
+| `ios`     | 13 |
+| `all`     | 17 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
 to `dotnet`.
