@@ -14,3 +14,4 @@ Code-specific skills: architecture audits, spec-driven delivery, testing and deb
 - **[sdd-apply](./sdd-apply/SKILL.md)** — Implement a GitHub Story and all its Task sub-issues using the SDD loop with ponytail principles.
 - **[sdd-verify](./sdd-verify/SKILL.md)** — Verify an implementation against its Story's acceptance criteria and the code-quality spec, in a fresh code-reviewer subagent.
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with red-green-refactor loop.
+- **[write-swift](./write-swift/SKILL.md)** — Modern Swift: value types, Swift 6 concurrency, some vs any, API design, performance, Swift Testing. Vendored from emilkowalski/skills; its license ships in the folder.

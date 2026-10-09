@@ -1,6 +1,6 @@
 # AI Engineering Stack
 
-A personal Claude Code harness: a 6-agent team, 17 skills and the scripts that
+A personal Claude Code harness: a 6-agent team, 20 skills and the scripts that
 wire them into any project. Clone it once, run one script per machine and one
 per project, and every Claude Code session works the same way, with the same
 rules, the same reviewers and the same delivery loop.
@@ -66,8 +66,8 @@ dispatches the rest as subagents: one prompt in, one report back.
 
 ### Skills
 
-17 skills across 3 categories. Each category directory has its own README:
-[engineering](./skills/engineering/README.md),
+20 skills across 4 categories. Each category directory has its own README:
+[engineering](./skills/engineering/README.md), [ui](./skills/ui/README.md),
 [productivity](./skills/productivity/README.md), [misc](./skills/misc/README.md).
 The **Origin** column is detailed in [Credits and sources](#credits-and-sources).
 
@@ -85,6 +85,9 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **dotnet-clean-architecture** | dotnet | Scans a .NET Clean Architecture solution for dependency-rule violations | Own |
 | **android-clean-architecture** | android | Clean Architecture patterns and a layer scan for Android/KMP | Own |
 | **project-bootstrap** | dotnet, android | Skeleton plus one vertical slice end to end | Own |
+| **write-swift** | ios | Modern Swift: value types, Swift 6 concurrency, generics, Swift Testing | emilkowalski/skills |
+| **apple-design** | ios | Apple's rules for static iOS screens: materials, text styles, accessibility, the eight principles | Adapted |
+| **swiftui-motion** | ios | SwiftUI motion in decision order: gate, spring, interruption, drag handoff, haptics, Reduce Motion | Adapted |
 | **grill-me** | all | Interviews you about a plan until every branch is resolved | mattpocock/skills |
 | **handoff** | all | Session handoff document, copied to the clipboard | Own |
 | **blind-pick** | all | Options for a hard-to-reverse decision argue against each other; blind judges pick the winner | Own |
@@ -169,8 +172,8 @@ script links only the matching ones. An Android project has no use for
 | `web`     | 14 |
 | `dotnet`  | 15 |
 | `android` | 15 |
-| `ios`     | 13 |
-| `all`     | 17 |
+| `ios`     | 16 |
+| `all`     | 20 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
 to `dotnet`.
@@ -294,6 +297,7 @@ structure; adapted ones say in their own file what changed and why.
 |--------|---------|--------------|
 | [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `tdd`, `diagnose` (upstream now `diagnosing-bugs`), `improve-codebase-architecture`, `grill-me`, `git-guardrails-claude-code` |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `caveman`, copied in May 2026, before upstream moved to Apache-2.0 in 3.0.0. Its license ships in [skills/productivity/caveman/LICENSE](./skills/productivity/caveman/LICENSE). Only change: the `stacks:` field |
+| [emilkowalski/skills](https://github.com/emilkowalski/skills) | MIT | `write-swift`, commit `e8a175d`, read 2026-10-09. Its license ships in [skills/engineering/write-swift/LICENSE](./skills/engineering/write-swift/LICENSE). Only change: the `stacks:` field |
 
 ### Inspiration and adapted rules
 
@@ -303,6 +307,7 @@ structure; adapted ones say in their own file what changed and why.
 | [NeoLabHQ/context-engineering-kit](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/agents) | `global/agents/` | Role split and reviewer discipline (architect, business-analyst, code-reviewer, security-auditor). Left out its threat prompting and its developer/tech-lead split. Details in `software-architect.md` |
 | [rubentanahara/claude-code-config-devtalk](https://github.com/rubentanahara/claude-code-config-devtalk) | `prompt-rewrite` | Skill structure, minus two rules that conflict with Anthropic's docs |
 | [Anthropic prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) | `prompt-rewrite`, all agents | The rules every prompt is checked against |
+| [emilkowalski/skills](https://github.com/emilkowalski/skills) | `apple-design`, `swiftui-motion` | `apple-design` and `animate`, rewritten for iOS and SwiftUI. Details in [skills/ui/README.md](./skills/ui/README.md) |
 | John Ousterhout, *A Philosophy of Software Design* | `improve-codebase-architecture` | "Design It Twice" for exploring alternative interfaces |
 
 ### Tools

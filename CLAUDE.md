@@ -6,7 +6,7 @@ them into a project. There is no application here — it is markdown and bash.
 ## Layout
 
 ```
-skills/<category>/<name>/SKILL.md   17 skills across 3 categories
+skills/<category>/<name>/SKILL.md   20 skills across 4 categories
 global/agents/<name>.md             6-agent team, user-level (all projects)
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
@@ -61,7 +61,7 @@ machine gets the whole team.
 reintroduce `.windsurf/`, `.opencode/` or their rules files.
 
 **Category READMEs must match the directory.** `skills/engineering/`,
-`productivity/` and `misc/` each have a README listing their skills. Adding or removing a
+`ui/`, `productivity/` and `misc/` each have a README listing their skills. Adding or removing a
 skill means updating it in the same commit.
 
 ## Context
