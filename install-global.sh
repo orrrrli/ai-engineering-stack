@@ -64,6 +64,20 @@ else
     echo "settings: agent set to $MAIN_AGENT"
 fi
 
+# 3b. Guardrails: merge the deny/ask rules from global/permissions.json. Adds the missing
+#     ones after the user's own, never removes or reorders a rule already there.
+PERMS="$STACK_DIR/global/permissions.json"
+BEFORE="$(jq '[.permissions.deny // [], .permissions.ask // []] | add | length' "$SETTINGS")"
+TMP="$(mktemp)"
+jq --slurpfile p "$PERMS" '
+    .permissions.deny = ((.permissions.deny // []) as $e | $e + ($p[0].permissions.deny - $e))
+  | .permissions.ask  = ((.permissions.ask  // []) as $e | $e + ($p[0].permissions.ask  - $e))
+' "$SETTINGS" > "$TMP"
+cat "$TMP" > "$SETTINGS"   # write in place: keeps permissions and any symlink
+rm -f "$TMP"
+AFTER="$(jq '[.permissions.deny, .permissions.ask] | add | length' "$SETTINGS")"
+echo "permissions: $((AFTER - BEFORE)) deny/ask rules added from global/permissions.json"
+
 # 4. Statusline (shows the running agent): link the script, set statusLine only if none exists
 STATUSLINE="$CLAUDE_DIR/statusline-command.sh"
 if [ -e "$STATUSLINE" ] && [ ! -L "$STATUSLINE" ]; then
