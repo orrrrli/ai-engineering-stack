@@ -4,11 +4,13 @@
 # A repo with no CI at all is blocked too (no checks reported): wire it only where CI exists.
 # Any other Bash command exits at the first test, so the cost per call is one jq.
 cmd=$(jq -r '.tool_input.command // empty')
-[[ "$cmd" == *"gh pr merge"* ]] || exit 0
+# Only a real call: `gh pr merge` at the start of a line or after ; & | ( — not the words
+# inside a PR body, a heredoc or an echo.
+merge=$(grep -oE '(^|[;&|(])[[:space:]]*gh pr merge[^;&|]*' <<<"$cmd" | head -1)
+[ -n "$merge" ] || exit 0
 
-merge=$(grep -oE 'gh pr merge[^;&|]*' <<<"$cmd" | head -1)
 pr=$(grep -oE 'merge +[0-9]+' <<<"$merge" | grep -oE '[0-9]+')
-repo=$(grep -oE '(-R|--repo)[ =]+[^ ]+' <<<"$merge" | sed -E 's/^(-R|--repo)[ =]+//')
+repo=$(grep -oE "(-R|--repo)[ =]+['\"]?[^ '\"]+" <<<"$merge" | sed -E "s/^(-R|--repo)[ =]+['\"]?//")
 
 out=$(gh pr checks ${pr:+"$pr"} ${repo:+-R "$repo"} 2>&1)
 status=$?

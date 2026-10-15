@@ -152,7 +152,7 @@ updates every place that uses it.
 | Hook | Event | Blocks | Cost per call | Scope |
 |------|-------|--------|---------------|-------|
 | `block-dangerous-git.sh` | `PreToolUse` / `Bash` | `git push` (every form), `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .`, `switch -f`, `stash drop/clear`; also through `git -C`, `bash -c`, `$(...)`, inline aliases and chains. Fails closed: no `jq` or unreadable input blocks every Bash call | One `jq` plus a bash parse of the command | Per machine or project. Not with `sdd-apply`, which pushes |
-| `merge-gate.sh` | `PreToolUse` / `Bash` | `gh pr merge` unless `gh pr checks` is all green (pending, red, no checks or unknown PR are blocked) | One `jq`; `gh` only on a merge | Per project, and only where the repo has CI: with no checks it blocks every merge |
+| `merge-gate.sh` | `PreToolUse` / `Bash` | `gh pr merge` called as a command (at line start or after `;` `&` `\|` `(`), unless `gh pr checks` is all green (pending, red, no checks or unknown PR are blocked). The words inside a PR body or heredoc don't trigger it | One `jq`; `gh` only on a merge | Per project, and only where the repo has CI: with no checks it blocks every merge |
 
 Wire one in `.claude/settings.local.json` (project) or `~/.claude/settings.json`
 (machine). Merge into an existing `hooks.PreToolUse` array, don't replace it:
@@ -174,15 +174,18 @@ Wire one in `.claude/settings.local.json` (project) or `~/.claude/settings.json`
 
 - Exit 2 blocks the tool call and shows stderr to Claude. Any other non-zero
   exit lets the command run, so a hook that crashes fails open.
-- Settings load when a session starts, from the folder it starts in. A session
-  already open, or opened inside a sub-repo, doesn't get the hook.
+- Project settings come from the folder the session starts in: a session
+  opened inside a sub-repo doesn't get the hook. Editing the settings file
+  applies to sessions already open too (seen on 2026-10-15), so a bug in a new
+  hook hits the session you're working in at once.
 - Every `PreToolUse` on `Bash` runs on every command. A new hook must exit at
   its first check when the command isn't its business, and its cost goes in
   the table above.
-- Checks: `bash global/claude-hooks/test-block-dangerous-git.sh` (exits 1 on
-  any failing case). For `merge-gate.sh`, pipe
-  `{"tool_input":{"command":"gh pr merge <N> -R <org>/<repo>"}}` into it: a green
-  PR exits 0, a missing one exits 2.
+- Checks, each exits 1 on any failing case:
+  `bash global/claude-hooks/test-block-dangerous-git.sh` and
+  `bash global/claude-hooks/test-merge-gate.sh <org>/<repo> <green-pr>` (needs `gh`
+  signed in). Run them from a file, not by typing the cases in a Bash call: an
+  active hook reads that command line and blocks it.
 
 ## Per-project installation
 
