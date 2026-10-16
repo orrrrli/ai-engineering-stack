@@ -1,6 +1,6 @@
 # AI Engineering Stack
 
-A personal Claude Code harness: a 6-agent team, 17 skills and the scripts that
+A personal Claude Code harness: a 6-agent team, 19 skills and the scripts that
 wire them into any project. Clone it once, run one script per machine and one
 per project, and every Claude Code session works the same way, with the same
 rules, the same reviewers and the same delivery loop.
@@ -66,9 +66,9 @@ dispatches the rest as subagents: one prompt in, one report back.
 
 ### Skills
 
-17 skills across 3 categories. Each category directory has its own README:
-[engineering](./skills/engineering/README.md),
-[productivity](./skills/productivity/README.md), [misc](./skills/misc/README.md).
+19 skills across 3 categories. Each category directory has its own README:
+[engineering](./skills/engineering/README.md), [ui](./skills/ui/README.md),
+[productivity](./skills/productivity/README.md).
 The **Origin** column is detailed in [Credits and sources](#credits-and-sources).
 
 | Skill | Stacks | What it does | Origin |
@@ -85,11 +85,13 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **dotnet-clean-architecture** | dotnet | Scans a .NET Clean Architecture solution for dependency-rule violations | Own |
 | **android-clean-architecture** | android | Clean Architecture patterns and a layer scan for Android/KMP | Own |
 | **project-bootstrap** | dotnet, android | Skeleton plus one vertical slice end to end | Own |
+| **write-swift** | ios | Modern Swift: value types, Swift 6 concurrency, generics, Swift Testing | emilkowalski/skills |
+| **apple-design** | ios | Apple's rules for static iOS screens: materials, text styles, accessibility, the eight principles | Adapted |
+| **swiftui-motion** | ios | SwiftUI motion in decision order: gate, spring, interruption, drag handoff, haptics, Reduce Motion | Adapted |
 | **grill-me** | all | Interviews you about a plan until every branch is resolved | mattpocock/skills |
 | **handoff** | all | Session handoff document, copied to the clipboard | Own |
 | **blind-pick** | all | Options for a hard-to-reverse decision argue against each other; blind judges pick the winner | Own |
 | **caveman** | all | Ultra-compressed replies, ~75% fewer tokens | JuliusBrussee/caveman |
-| **git-guardrails-claude-code** | all | Opt-in PreToolUse hook that blocks destructive git commands. Needs jq; tested on macOS only. Not used here (see Guardrails) | mattpocock/skills |
 
 `ponytail` is no longer vendored here. It is installed as a Claude Code plugin.
 
@@ -135,9 +137,55 @@ Known gaps:
   blocked; the risk is accepted.
 - Bash rules match the start of the command text. Every rule needs a `git -C`
   variant, because the agent is told to use `git -C` instead of `cd`.
-- `skills/misc/git-guardrails-claude-code` is not used here: it blocks every
-  `git push`, which `sdd-apply` needs to open PRs. It stays as the opt-in
-  standard for setups that want a hard block instead of ask rules.
+- The `block-dangerous-git` hook (see "Optional Claude Code hooks") is not used
+  here: it blocks every `git push`, which `sdd-apply` needs to open PRs. It
+  stays as the opt-in for setups that want a hard block instead of ask rules.
+
+### Optional Claude Code hooks
+
+Scripts in `global/claude-hooks/`. Nothing installs them: no script in this
+repo writes a `hooks` key (init leaves `"hooks": {}` empty). You opt in per
+project or per machine by pointing a settings file at the script here, the
+same way repos point at the commit-msg hook. Never copy it: `git pull` here
+updates every place that uses it.
+
+| Hook | Event | Blocks | Cost per call | Scope |
+|------|-------|--------|---------------|-------|
+| `block-dangerous-git.sh` | `PreToolUse` / `Bash` | `git push` (every form), `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .`, `switch -f`, `stash drop/clear`; also through `git -C`, `bash -c`, `$(...)`, inline aliases and chains. Fails closed: no `jq` or unreadable input blocks every Bash call | One `jq` plus a bash parse of the command | Per machine or project. Not with `sdd-apply`, which pushes |
+| `merge-gate.sh` | `PreToolUse` / `Bash` | `gh pr merge` called as a command (at line start or after `;` `&` `\|` `(`), unless `gh pr checks` is all green (pending, red, no checks or unknown PR are blocked). The words inside a PR body or heredoc don't trigger it | One `jq`; `gh` only on a merge | Per project, and only where the repo has CI: with no checks it blocks every merge |
+
+Wire one in `.claude/settings.local.json` (project) or `~/.claude/settings.json`
+(machine). Merge into an existing `hooks.PreToolUse` array, don't replace it:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "~/dev/personal/ai-engineering-stack/global/claude-hooks/merge-gate.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+- Exit 2 blocks the tool call and shows stderr to Claude. Any other non-zero
+  exit lets the command run, so a hook that crashes fails open.
+- Project settings come from the folder the session starts in: a session
+  opened inside a sub-repo doesn't get the hook. Editing the settings file
+  applies to sessions already open too (seen on 2026-10-15), so a bug in a new
+  hook hits the session you're working in at once.
+- Every `PreToolUse` on `Bash` runs on every command. A new hook must exit at
+  its first check when the command isn't its business, and its cost goes in
+  the table above.
+- Checks, each exits 1 on any failing case:
+  `bash global/claude-hooks/test-block-dangerous-git.sh` and
+  `bash global/claude-hooks/test-merge-gate.sh <org>/<repo> <green-pr>` (needs `gh`
+  signed in). Run them from a file, not by typing the cases in a Bash call: an
+  active hook reads that command line and blocks it.
 
 ## Per-project installation
 
@@ -166,11 +214,11 @@ script links only the matching ones. An Android project has no use for
 
 | `--stack` | skills |
 |-----------|--------|
-| `web`     | 14 |
-| `dotnet`  | 15 |
-| `android` | 15 |
-| `ios`     | 13 |
-| `all`     | 17 |
+| `web`     | 13 |
+| `dotnet`  | 14 |
+| `android` | 14 |
+| `ios`     | 15 |
+| `all`     | 19 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
 to `dotnet`.
@@ -292,8 +340,9 @@ structure; adapted ones say in their own file what changed and why.
 
 | Source | License | What we took |
 |--------|---------|--------------|
-| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `tdd`, `diagnose` (upstream now `diagnosing-bugs`), `improve-codebase-architecture`, `grill-me`, `git-guardrails-claude-code` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `tdd`, `diagnose` (upstream now `diagnosing-bugs`), `improve-codebase-architecture`, `grill-me`, and `global/claude-hooks/block-dangerous-git.sh` (from its `git-guardrails-claude-code` skill; the skill wrapper was dropped) |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `caveman`, copied in May 2026, before upstream moved to Apache-2.0 in 3.0.0. Its license ships in [skills/productivity/caveman/LICENSE](./skills/productivity/caveman/LICENSE). Only change: the `stacks:` field |
+| [emilkowalski/skills](https://github.com/emilkowalski/skills) | MIT | `write-swift`, commit `e8a175d`, read 2026-10-09. Its license ships in [skills/engineering/write-swift/LICENSE](./skills/engineering/write-swift/LICENSE). Only change: the `stacks:` field |
 
 ### Inspiration and adapted rules
 
@@ -303,6 +352,7 @@ structure; adapted ones say in their own file what changed and why.
 | [NeoLabHQ/context-engineering-kit](https://github.com/NeoLabHQ/context-engineering-kit/tree/master/agents) | `global/agents/` | Role split and reviewer discipline (architect, business-analyst, code-reviewer, security-auditor). Left out its threat prompting and its developer/tech-lead split. Details in `software-architect.md` |
 | [rubentanahara/claude-code-config-devtalk](https://github.com/rubentanahara/claude-code-config-devtalk) | `prompt-rewrite` | Skill structure, minus two rules that conflict with Anthropic's docs |
 | [Anthropic prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) | `prompt-rewrite`, all agents | The rules every prompt is checked against |
+| [emilkowalski/skills](https://github.com/emilkowalski/skills) | `apple-design`, `swiftui-motion` | `apple-design` and `animate`, rewritten for iOS and SwiftUI. Details in [skills/ui/README.md](./skills/ui/README.md) |
 | John Ousterhout, *A Philosophy of Software Design* | `improve-codebase-architecture` | "Design It Twice" for exploring alternative interfaces |
 
 ### Tools
@@ -323,5 +373,6 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
 | `global/agents/` | The 6-agent team |
 | `global/githooks/commit-msg` | Commit message hook, referenced via `core.hooksPath` |
+| `global/claude-hooks/` | Optional Claude Code hooks, opt-in, referenced from settings |
 | `global-rules.md` | Global engineering standards |
 | `PERSISTENT-MEMORY.md` | claude-mem + engram memory guide |

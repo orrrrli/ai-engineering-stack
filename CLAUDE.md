@@ -6,13 +6,14 @@ them into a project. There is no application here — it is markdown and bash.
 ## Layout
 
 ```
-skills/<category>/<name>/SKILL.md   17 skills across 3 categories
+skills/<category>/<name>/SKILL.md   19 skills across 3 categories
 global/agents/<name>.md             6-agent team, user-level (all projects)
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
 install-global.sh                   user-level setup, once per machine
 global/statusline-command.sh        statusline, linked by install-global.sh
 global/githooks/commit-msg          commit message hook; repos point at it via core.hooksPath, never copied
+global/claude-hooks/<name>.sh       optional Claude Code hooks; settings point at them, never copied, nothing installs them
 global-rules.md                     engineering standards shipped to projects
 ```
 
@@ -61,7 +62,7 @@ machine gets the whole team.
 reintroduce `.windsurf/`, `.opencode/` or their rules files.
 
 **Category READMEs must match the directory.** `skills/engineering/`,
-`productivity/` and `misc/` each have a README listing their skills. Adding or removing a
+`ui/` and `productivity/` each have a README listing their skills. Adding or removing a
 skill means updating it in the same commit.
 
 ## Context
