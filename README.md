@@ -27,6 +27,7 @@ removed. Everything targets Claude Code's own conventions (`.claude/skills/`,
 - [Quick start](#quick-start)
 - [What's inside](#whats-inside): agents, skills
 - [Global layer](#global-layer-once-per-machine)
+- [Cloud sessions](#cloud-sessions-claudeaicode)
 - [Per-project installation](#per-project-installation)
 - [Tooling](#tooling)
 - [Roadmap](#roadmap)
@@ -196,6 +197,41 @@ Wire one in `.claude/settings.local.json` (project) or `~/.claude/settings.json`
   `bash global/claude-hooks/test-merge-gate.sh <org>/<repo> <green-pr>` (needs `gh`
   signed in). Run them from a file, not by typing the cases in a Bash call: an
   active hook reads that command line and blocks it.
+
+## Cloud sessions (claude.ai/code)
+
+A cloud session runs in a fresh Ubuntu VM with only the repo cloned. It loads
+the repo's `CLAUDE.md`, `.claude/` and `.mcp.json`, and nothing from your
+`~/.claude`: no user-level agents, skills, settings, plugins or MCP servers
+([docs](https://code.claude.com/docs/en/cloud-environments.md)).
+
+The environment's setup script fills that gap. It runs as root before Claude
+starts, clones this repo, runs `install-global.sh`, and writes your user-level
+`CLAUDE.md` plus the files it imports with `@`.
+
+Setup, once per environment:
+
+1. Install the Claude GitHub App on the repos you'll work in (or run
+   `/web-setup` in the CLI).
+2. Generate the script: `./global/build-cloud-setup.sh | pbcopy`
+3. In claude.ai/code, open the environment settings, keep network access on
+   `Trusted`, and paste the script as the setup script.
+4. Open a session and check: `ls ~/.claude/agents ~/.claude/*.md`, and ask it
+   to quote the first line of its system prompt. It should say it is the
+   `software-architect`.
+
+- The output embeds your personal files (name, email, rules). It goes into the
+  environment config, never into this repo, which is public.
+- Rerun step 2 and paste again after you change `persona.md`, `workflows.md`
+  or any file `CLAUDE.md` imports. The script holds a copy, not a link.
+- The VM caches the setup for about 7 days. A change merged here reaches cloud
+  sessions only when that cache rebuilds. Editing the setup script (even a
+  comment) forces it.
+- Seen working on 2026-10-16: the session runs as `root` (`HOME=/root`), and
+  `"agent": "software-architect"` in the written `settings.json` is honored.
+- `RTK.md` is skipped. These don't reach the cloud at all: plugins (claude-mem,
+  engram, ponytail), `rtk`, the NotchBuddy statusline and local MCP servers.
+  Cloud sessions have no memory between sessions.
 
 ## Per-project installation
 
@@ -380,6 +416,7 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 |------|---------|
 | `install-global.sh` | User-level setup, once per machine |
 | `global/permissions.json` | Guardrail deny/ask rules, merged into `~/.claude/settings.json` by `install-global.sh` |
+| `global/build-cloud-setup.sh` | Prints the setup script for a claude.ai/code cloud environment |
 | `init-project.sh` | Project setup, `--stack` aware |
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
 | `global/agents/` | The 6-agent team |
