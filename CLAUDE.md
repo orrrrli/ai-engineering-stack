@@ -13,6 +13,7 @@ init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
 install-global.sh                   user-level setup, once per machine
 global/statusline-command.sh        statusline, linked by install-global.sh
 global/permissions.json             guardrail deny/ask rules, merged into ~/.claude/settings.json by install-global.sh
+global/build-cloud-setup.sh         prints the claude.ai/code environment setup script; output holds personal files, never commit it
 global/githooks/commit-msg          commit message hook; repos point at it via core.hooksPath, never copied
 global/claude-hooks/<name>.sh       optional Claude Code hooks; settings point at them, never copied, nothing installs them
 global-rules.md                     engineering standards shipped to projects
