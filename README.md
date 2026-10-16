@@ -108,6 +108,9 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
   are replaced; a real directory with the same name is skipped.
 - Sets `"agent": "software-architect"` in `~/.claude/settings.json` with `jq`,
   so every session runs as the architect. Other keys are left untouched.
+- Merges the guardrail rules from `global/permissions.json` into
+  `permissions.deny`/`ask` (see Guardrails). Only adds the missing ones, after
+  yours; never removes or reorders a rule.
 - Symlinks `~/.claude/statusline-command.sh` to `global/` (repo, branch, PR,
   running agent, model, context and rate limits; needs a Nerd Font) and sets
   `statusLine` only when none is configured.
@@ -117,9 +120,14 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 
 Safe to re-run. Agents update with `git pull`, since they are a symlink.
 
-### Guardrails (user level, not installed by this repo)
+### Guardrails (user level, installed by `install-global.sh`)
 
-These live in `~/.claude/` and are set by hand. `install-global.sh` does not touch them.
+The rules live in `global/permissions.json` and `install-global.sh` merges them
+into `~/.claude/settings.json`. Claude Code enforces them before a tool runs,
+whatever the model decides, and at no cost per call (no process, unlike a hook).
+To change one, edit `global/permissions.json` and re-run the script. Removing a
+rule from the file does not remove it from a machine that already has it: delete
+it from `settings.json` by hand.
 
 - **No Bash sandbox.** Removed: it broke `pbcopy` (`/handoff`) and other projects.
   Permission rules are the only barrier left.
@@ -128,6 +136,8 @@ These live in `~/.claude/` and are set by hand. `install-global.sh` does not tou
   `git -C <dir>` form; `rm -rf /*` and `rm -rf ~*`.
 - **Ask rules** for commands that destroy uncommitted work: `git reset --hard`,
   `clean -f`, `branch -D`, `checkout .`, `restore .`, each with its `git -C` form.
+  Also for adding a dependency: `npm install`/`i`/`add`, `pnpm add`,
+  `dotnet add package`, `brew install`.
 - Commit messages are checked by the git `commit-msg` hook that init installs
   per project (see "Commit message hook" below), not by a Claude Code hook.
 
@@ -369,6 +379,7 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | File | Purpose |
 |------|---------|
 | `install-global.sh` | User-level setup, once per machine |
+| `global/permissions.json` | Guardrail deny/ask rules, merged into `~/.claude/settings.json` by `install-global.sh` |
 | `init-project.sh` | Project setup, `--stack` aware |
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
 | `global/agents/` | The 6-agent team |
