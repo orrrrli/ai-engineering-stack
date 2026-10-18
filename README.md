@@ -81,7 +81,7 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **prompt-rewrite** | all | Audits a skill, agent or prompt against Anthropic's prompting docs | Adapted |
 | **tdd** | all | Red-green-refactor loop | mattpocock/skills |
 | **diagnose** | all | Reproduce, minimise, hypothesise, instrument, fix, regression-test | mattpocock/skills |
-| **improve-codebase-architecture** | all | Finds deepening opportunities using CONTEXT.md and ADRs | mattpocock/skills |
+| **improve-codebase-architecture** | all | Finds deepening opportunities using the .claude/ tree and engram; Artifact report | Adapted |
 | **audit-layer-boundaries** | web | Scans for the three violations that break the layer contract | Own |
 | **dotnet-clean-architecture** | dotnet | Scans a .NET Clean Architecture solution for dependency-rule violations | Own |
 | **android-clean-architecture** | android | Clean Architecture patterns and a layer scan for Android/KMP | Own |
@@ -386,7 +386,7 @@ structure; adapted ones say in their own file what changed and why.
 
 | Source | License | What we took |
 |--------|---------|--------------|
-| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `tdd`, `diagnose` (upstream now `diagnosing-bugs`), `improve-codebase-architecture`, `grill-me`, and `global/claude-hooks/block-dangerous-git.sh` (from its `git-guardrails-claude-code` skill; the skill wrapper was dropped) |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `tdd`, `diagnose` (upstream now `diagnosing-bugs`), `improve-codebase-architecture` (resynced with commit `49dd158`, read 2026-10-17; reads the `.claude/` tree instead of CONTEXT.md, records rejections in engram instead of ADRs, reports as an Artifact), `grill-me`, and `global/claude-hooks/block-dangerous-git.sh` (from its `git-guardrails-claude-code` skill; the skill wrapper was dropped) |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `caveman`, copied in May 2026, before upstream moved to Apache-2.0 in 3.0.0. Its license ships in [skills/productivity/caveman/LICENSE](./skills/productivity/caveman/LICENSE). Only change: the `stacks:` field |
 | [emilkowalski/skills](https://github.com/emilkowalski/skills) | MIT | `write-swift`, commit `e8a175d`, read 2026-10-09. Its license ships in [skills/engineering/write-swift/LICENSE](./skills/engineering/write-swift/LICENSE). Only change: the `stacks:` field |
 
