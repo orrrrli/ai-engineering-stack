@@ -19,7 +19,6 @@ ICON_REPO=$'\xef\x81\xbb'       # nf-fa-folder
 ICON_PR=$'\xef\x90\x87'         # nf-oct-git_pull_request
 ICON_MODEL=$'\xef\x8b\x9b'      # nf-fa-microchip
 ICON_BOLT=$'\xef\x83\xa7'       # nf-fa-bolt
-ICON_VIM=$'\xee\x98\xab'        # nf-custom-vim
 ICON_API=$'\xef\x88\xb3'        # nf-fa-server
 ICON_INTERFACE=$'\xef\x85\xb9'  # nf-fa-apple
 
@@ -153,7 +152,6 @@ model=${model% (*context)}
 agent=$(echo "$input" | jq -r '.agent.name // empty')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 effort=$(echo "$input" | jq -r '.effort.level // empty')
-vim_mode=$(echo "$input" | jq -r '.vim.mode // empty')
 pr_number=$(echo "$input" | jq -r '.pr.number // empty')
 pr_state=$(echo "$input" | jq -r '.pr.review_state // "open"')
 five_hour=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
@@ -226,15 +224,6 @@ if [ -n "$seven_day" ]; then
 fi
 if [ -n "$rate_part" ]; then
   parts+=("$rate_part")
-fi
-
-if [ -n "$vim_mode" ]; then
-  case "$vim_mode" in
-    INSERT)  vim_color="$GREEN" ;;
-    VISUAL*) vim_color="$YELLOW" ;;
-    *)       vim_color=$'\033[37m' ;;
-  esac
-  parts+=("${vim_color}${ICON_VIM} ${vim_mode}${RESET}")
 fi
 
 result=""
