@@ -29,8 +29,8 @@ cat <<EOF
 #!/bin/bash
 set -euo pipefail
 command -v jq >/dev/null || apt-get install -y jq
-git clone --depth 1 $REPO_URL /opt/ai-engineering-stack
-bash /opt/ai-engineering-stack/install-global.sh
+git clone --depth 1 $REPO_URL /opt/clawd-harness
+bash /opt/clawd-harness/install-global.sh
 
 # Personal files: generated from $CLAUDE_DIR, not in the public repo
 EOF

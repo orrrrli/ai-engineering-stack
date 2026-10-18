@@ -37,13 +37,13 @@ removed. Everything targets Claude Code's own conventions (`.claude/skills/`,
 ## Quick start
 
 ```bash
-git clone <this-repo> ~/dev/personal/ai-engineering-stack
+git clone <this-repo> ~/dev/personal/clawd-harness
 
 # Once per machine
-~/dev/personal/ai-engineering-stack/install-global.sh
+~/dev/personal/clawd-harness/install-global.sh
 
 # Once per project
-~/dev/personal/ai-engineering-stack/init-project.sh ~/dev/my-app --stack=web
+~/dev/personal/clawd-harness/init-project.sh ~/dev/my-app --stack=web
 ```
 
 Then open Claude Code in the project and run `/fill-context`.
@@ -99,7 +99,7 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 ## Global layer (once per machine)
 
 ```bash
-~/dev/personal/ai-engineering-stack/install-global.sh
+~/dev/personal/clawd-harness/install-global.sh
 ```
 
 - Symlinks `~/.claude/agents` to `global/agents/`.
@@ -175,7 +175,7 @@ Wire one in `.claude/settings.local.json` (project) or `~/.claude/settings.json`
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "~/dev/personal/ai-engineering-stack/global/claude-hooks/merge-gate.sh" }
+          { "type": "command", "command": "~/dev/personal/clawd-harness/global/claude-hooks/merge-gate.sh" }
         ]
       }
     ]
@@ -240,16 +240,16 @@ context tree, the gitignore entries, and the commit-msg hook in one pass.
 
 ```bash
 # Web / Next.js project
-~/dev/personal/ai-engineering-stack/init-project.sh ~/dev/my-app --stack=web
+~/dev/personal/clawd-harness/init-project.sh ~/dev/my-app --stack=web
 
 # .NET Clean Architecture project
-~/dev/personal/ai-engineering-stack/init-dotnet-project.sh ~/dev/my-api
+~/dev/personal/clawd-harness/init-dotnet-project.sh ~/dev/my-api
 
 # Android / Kotlin project
-~/dev/personal/ai-engineering-stack/init-project.sh ~/dev/my-app --stack=android
+~/dev/personal/clawd-harness/init-project.sh ~/dev/my-app --stack=android
 
 # iOS / SwiftUI project
-~/dev/personal/ai-engineering-stack/init-project.sh ~/dev/my-app --stack=ios
+~/dev/personal/clawd-harness/init-project.sh ~/dev/my-app --stack=ios
 ```
 
 ### `--stack`: install only what the project needs
@@ -276,7 +276,7 @@ project at it with local git config, so nothing is copied or committed into
 the work repo:
 
 ```bash
-git config core.hooksPath ~/dev/personal/ai-engineering-stack/global/githooks
+git config core.hooksPath ~/dev/personal/clawd-harness/global/githooks
 ```
 
 The hook rejects a subject that is neither conventional (`fix(scope): ...`) nor

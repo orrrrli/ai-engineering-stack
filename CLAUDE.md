@@ -1,4 +1,4 @@
-# ai-engineering-stack
+# clawd-harness
 
 The Claude Code harness itself: skills, agents, and the init scripts that wire
 them into a project. There is no application here — it is markdown and bash.
