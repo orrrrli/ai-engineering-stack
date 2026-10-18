@@ -7,7 +7,7 @@ Code-specific skills: architecture audits, spec-driven delivery, testing and deb
 - **[diagnose](./diagnose/SKILL.md)** — Disciplined diagnosis loop for hard bugs and performance regressions. Reproduce → minimise → hypothesise → instrument → fix → regression-test.
 - **[dotnet-clean-architecture](./dotnet-clean-architecture/SKILL.md)** — Scan a .NET Clean Architecture solution for the five violations that break the dependency rule.
 - **[fill-context](./fill-context/SKILL.md)** — Build or regenerate the full .claude/ context tree by scanning the codebase and grilling the developer on what can't be inferred from code alone.
-- **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)** — Find deepening opportunities in a codebase, informed by the domain language in CONTEXT.md and the decisions in docs/adr/.
+- **[improve-codebase-architecture](./improve-codebase-architecture/SKILL.md)** — Find deepening opportunities in a codebase, informed by the .claude/ context tree and past rejections in engram, presented as a claude.ai Artifact report. Manual only.
 - **[prd-to-github-backlog](./prd-to-github-backlog/SKILL.md)** — Turn a PRD/spec into a GitHub Project with a full engineering backlog: epics → story sub-issues → task sub-issues, organized by phase and sprint.
 - **[project-bootstrap](./project-bootstrap/SKILL.md)** — Scaffold a brand-new full-stack project in one pass: a working skeleton plus exactly one vertical slice implemented end-to-end.
 - **[prompt-rewrite](./prompt-rewrite/SKILL.md)** — Audit or rewrite LLM instructions (a skill, CLAUDE.md, agent definition, system prompt, tool description or a single prompt) against Anthropic's prompting guidance for current Claude models.
