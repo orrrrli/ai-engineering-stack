@@ -44,6 +44,7 @@ This file serves as the single source of truth for AI behavior and engineering s
   - Treat tests as executable documentation. Test behavior (what it does), not internal implementation (how it does it).
   - Exhaustively cover **sad paths** (error cases) and boundary values.
   - Minimize Mocks. Mock only at the boundaries of the system (network calls, database); keep the logical core pure and easily testable.
+- **Never weaken tests to get green:** do not delete, skip, loosen assertions, or edit expected values to match the output. Do not touch test or CI config to pass. A test that looks wrong is reported, not changed.
 
 ## 7. Advanced Stack Usage and Context
 - **Mandatory Context Rule:** BEFORE proposing any large architectural change, adding heavy dependencies, or structuring new databases, **you must read the local `CONTEXT.md`** file of the project to avoid deviating from the domain model.

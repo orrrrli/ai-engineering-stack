@@ -1,5 +1,5 @@
 ---
-name: sdd-verify
+name: spec-verify
 stacks: [all]
 context: fork
 agent: code-reviewer
@@ -9,11 +9,11 @@ description: >
   code-quality spec, in a fresh code-reviewer subagent. Delivers PASS/FAIL per
   criterion with file:line evidence, after running the project's own tests.
   Report only: never fixes, never closes issues. Use after implementing a task,
-  when the user says "verify this", "does this match the spec", "sdd-verify",
-  and from sdd-apply Phase 4.
+  when the user says "verify this", "does this match the spec", "spec-verify",
+  and from spec-apply Phase 4.
 ---
 
-# SDD Verify
+# Spec Verify
 
 Verify `$ARGUMENTS` against its acceptance criteria. You start with no
 conversation history: everything you need is in this file, the repo, and GitHub.
@@ -88,6 +88,20 @@ Never stash or touch the real working tree: other reviewers read it in
 parallel. Failures that already exist on the base are reported as
 **pre-existing** and do not count toward the verdict.
 
+### Mutation check
+
+For each in-scope criterion with a passing test, prove the test catches a fault:
+
+1. Build a scratch worktree with the change applied: `git worktree add --detach
+   "$(mktemp -d)" HEAD`, then copy into it every file from
+   `git ls-files -m -o --exclude-standard` (committed work: use HEAD as is).
+2. Break the line that implements the criterion, once: invert a condition, shift a
+   boundary (`>` to `>=`), drop a guard, or return a default.
+3. Run only that criterion's test. Red = the test detects the fault. Green = it does not.
+4. `git worktree remove` it. Never mutate the real working tree.
+
+One mutation per criterion. Do not hunt for exotic mutations.
+
 Rely on the project's existing tests. Do not build your own harness (scratch
 apps, ad-hoc HTTP clients, containers) unless an in-scope criterion has no test
 at all; then the smallest check that proves it. The browser check below is
@@ -120,8 +134,10 @@ the criterion failing, it is ✗ regardless of what the tests say.
 
 - **Spec 1, acceptance criteria:** only the criteria this change is due to
   satisfy. Check behavior, not that some code exists for it.
-  ✓ = a test exercises the behavior (at any layer) and passes.
-  ~ PARTIAL = the code does it but no test proves it.
+  ✓ = a test exercises the behavior (at any layer), passes, and fails under the
+  mutation check.
+  ~ PARTIAL = the code does it but no test proves it, or the test stays green
+  under the mutation (it does not detect the fault).
   A layer the AC names but no test covers (e.g. the HTTP status) is a minor
   finding, not a downgrade.
 - **Spec 2, code quality** (in-scope lines only): duplication, naming,
@@ -136,6 +152,7 @@ Write the reasoning before each verdict.
 ```
 VERDICT: PASS | FAIL   <ID> — <title>   (Story #<n>)
 Tests: <command> → <result>   [pre-existing failures: <list or none>]
+Mutation: AC1 <mutation> → red | AC2 <mutation> → GREEN (survived)
 
 Acceptance criteria
   ✓ AC1 <criterion>: <evidence, file:line>

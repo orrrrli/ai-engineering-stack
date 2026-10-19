@@ -74,8 +74,8 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 
 | Skill | Stacks | What it does | Origin |
 |-------|--------|--------------|--------|
-| **sdd-apply** | all | Implements a GitHub Story and its Tasks: explore, propose, apply, verify, commit, PR | Own |
-| **sdd-verify** | all | Checks an implementation against its acceptance criteria in a fresh code-reviewer | Own |
+| **spec-apply** | all | Implements a GitHub Story and its Tasks: explore, propose, failing tests, apply, verify, commit, PR | Own |
+| **spec-verify** | all | Checks an implementation against its acceptance criteria in a fresh code-reviewer, with a mutation check | Own |
 | **prd-to-github-backlog** | all | PRD to GitHub Project: epics, stories, tasks, sprints, estimates | Own |
 | **fill-context** | all | Scans the codebase and interviews you to write the `.claude/` context tree | Own |
 | **prompt-rewrite** | all | Audits a skill, agent or prompt against Anthropic's prompting docs | Adapted |
@@ -96,6 +96,34 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 
 `ponytail` is no longer vendored here. It is installed as a Claude Code plugin.
 
+#### How spec-apply writes code
+
+The spec drives the work. The tests are the spec made executable, and the agent that
+writes the code does not own them.
+
+```
+Story AC (Given/When/Then, approved)          business-analyst drafts them if missing
+  -> Propose     plan + responsibilities + one behavior line per AC     STOP for approval
+  -> Tests       test-writer turns the AC into failing tests, then they are staged read-only
+  -> Apply       the implementer makes those tests pass (ponytail ladder), never edits them
+  -> Verify      spec-verify reruns the tests and breaks each AC's line to prove its test fails
+```
+
+1. **Tests come from the AC, not the code.** `test-writer` sees the AC and the approved
+   interface, never an implementation, so expected values cannot copy what the code returns.
+   It adds only a not-implemented stub when the interface does not exist yet.
+2. **The implementer cannot buy a green run.** The tests are staged after the Tests phase;
+   Verify fails if `git diff` shows them changed. A test that looks wrong stops the run and
+   goes to you, since it usually means an ambiguous AC.
+3. **Propose names responsibilities.** Each one (business rule, persistence, security,
+   external call, presentation) gets a place: an existing component, a new one with a reason,
+   or a framework capability. This is what stops a credential check written as a bare `if`.
+4. **Passing is not enough.** For each AC, `spec-verify` breaks the implementing line once in
+   a scratch worktree. A test that stays green marks the AC `~ PARTIAL`, and the task fails.
+
+Tasks with no testable behavior (config, scaffolding) say so in Propose and skip the Tests
+phase. `tdd` stays a separate skill for test-first work outside a Story.
+
 ## Global layer (once per machine)
 
 ```bash
@@ -105,7 +133,7 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 - Symlinks `~/.claude/agents` to `global/agents/`.
   An existing `~/.claude/agents` directory is moved to `agents.bak-<timestamp>`.
 - Symlinks the skills every session needs into `~/.claude/skills`: fill-context,
-  prd-to-github-backlog, prompt-rewrite, sdd-apply, sdd-verify, grill-me, handoff. Stale links
+  prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, grill-me, handoff. Stale links
   are replaced; a real directory with the same name is skipped.
 - Sets `"agent": "software-architect"` in `~/.claude/settings.json` with `jq`,
   so every session runs as the architect. Other keys are left untouched.
@@ -149,7 +177,7 @@ Known gaps:
 - Bash rules match the start of the command text. Every rule needs a `git -C`
   variant, because the agent is told to use `git -C` instead of `cd`.
 - The `block-dangerous-git` hook (see "Optional Claude Code hooks") is not used
-  here: it blocks every `git push`, which `sdd-apply` needs to open PRs. It
+  here: it blocks every `git push`, which `spec-apply` needs to open PRs. It
   stays as the opt-in for setups that want a hard block instead of ask rules.
 
 ### Optional Claude Code hooks
@@ -162,7 +190,7 @@ updates every place that uses it.
 
 | Hook | Event | Blocks | Cost per call | Scope |
 |------|-------|--------|---------------|-------|
-| `block-dangerous-git.sh` | `PreToolUse` / `Bash` | `git push` (every form), `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .`, `switch -f`, `stash drop/clear`; also through `git -C`, `bash -c`, `$(...)`, inline aliases and chains. Fails closed: no `jq` or unreadable input blocks every Bash call | One `jq` plus a bash parse of the command | Per machine or project. Not with `sdd-apply`, which pushes |
+| `block-dangerous-git.sh` | `PreToolUse` / `Bash` | `git push` (every form), `reset --hard`, `clean -f`, `branch -D`, `checkout .`, `restore .`, `switch -f`, `stash drop/clear`; also through `git -C`, `bash -c`, `$(...)`, inline aliases and chains. Fails closed: no `jq` or unreadable input blocks every Bash call | One `jq` plus a bash parse of the command | Per machine or project. Not with `spec-apply`, which pushes |
 | `merge-gate.sh` | `PreToolUse` / `Bash` | `gh pr merge` called as a command (at line start or after `;` `&` `\|` `(`), unless `gh pr checks` is all green (pending, red, no checks or unknown PR are blocked). The words inside a PR body or heredoc don't trigger it | One `jq`; `gh` only on a merge | Per project, and only where the repo has CI: with no checks it blocks every merge |
 
 Wire one in `.claude/settings.local.json` (project) or `~/.claude/settings.json`
@@ -337,7 +365,7 @@ replaces another.
 | **headroom** | 0.37 | Context optimization layer for LLM applications — a proxy that compresses traffic to the model, plus stored memories and a savings dashboard (`headroom savings`, `headroom dashboard`). |
 | **claude-mem** | — | Persistent memory for the main session, captured by hooks with nothing to call. Prior work is injected as context when a session opens. |
 | **[engram](https://github.com/Gentleman-Programming/engram)** | 3.0 | Memory for subagents. `code-reviewer`, `debugger` and `security-auditor` search it before working and save confirmed findings through MCP (`mem_search`, `mem_save`), since it can't write files and claude-mem is read-only to subagents. |
-| **[ego-browser](https://github.com/citrolabs/ego-lite)** | 2.0 | Browser for agents (ego lite app + skill, macOS). `sdd-verify` uses it in web projects to check acceptance criteria that are visible in the UI; without it those criteria stay `~ PARTIAL`. Install: `npx skills add citrolabs/ego-lite -g -a claude-code`. |
+| **[ego-browser](https://github.com/citrolabs/ego-lite)** | 2.0 | Browser for agents (ego lite app + skill, macOS). `spec-verify` uses it in web projects to check acceptance criteria that are visible in the UI; without it those criteria stay `~ PARTIAL`. Install: `npx skills add citrolabs/ego-lite -g -a claude-code`. |
 | **[graphify](https://github.com/Graphify-Labs/graphify)** | 0.8 | Turns a codebase into a queryable knowledge graph — tree-sitter AST parsing across 37 languages, plus docs, SQL and PDFs. Ask `graphify query "..."` instead of grepping; `path A B` traces how two things connect, `affected X` finds what a change breaks. |
 | **[ui-ux-pro-max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** | 2.13 | Local design database (font pairings, palettes, UX rules, SwiftUI guidelines) with a stdlib-only Python search script. Install as a plugin, one command at a time: `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill`, then `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill`. |
 
@@ -365,7 +393,7 @@ Pending, in order:
    output decides which plugins and skills to prune.
 2. **Evals.** A fixture repo with seeded bugs; run `code-reviewer` headless
    (`claude -p --output-format json`) three times and score bugs found against
-   the bare model. Then `sdd-apply` on a task with pre-written tests. Re-run
+   the bare model. Then `spec-apply` on a task with pre-written tests. Re-run
    after every prompt rewrite of an agent.
 
 Small cleanups:
