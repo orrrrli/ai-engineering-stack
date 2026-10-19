@@ -6,7 +6,7 @@ description: >
   Architecture + CQRS (MediatR) and mobile React Native/Expo — going from an
   already-filled root CLAUDE.md context straight to a working skeleton plus
   exactly one vertical slice example feature implemented end-to-end. Fills the
-  gap between fill-context (context only, no code) and sdd-apply (per-issue,
+  gap between fill-context (context only, no code) and spec-apply (per-issue,
   too granular for day-zero). Use when the user wants to "levantar el
   proyecto", bootstrap a new app from scratch, scaffold Clean Architecture +
   Expo, or says "project-bootstrap".
@@ -108,7 +108,7 @@ skill (see Hard rules).
 **Goal:** implement the chosen entity's simplest real use case, end-to-end,
 as the reference pattern for everything that comes after.
 
-Apply the same discipline as `sdd-apply`'s Apply phase:
+Apply the same discipline as `spec-apply`'s Apply phase:
 1. **Does this need to exist at all?** Only what the slice requires.
 2. **Already in the codebase?** Nothing yet — this run establishes the
    pattern others reuse. Don't pre-build abstractions for future slices.
@@ -142,7 +142,7 @@ Slice contents (adjust command vs query to match the chosen use case):
 
 After each file, state: file path + what it does + why (one line). Mark any
 deliberate simplification with a `// ponytail:` comment, same convention as
-`sdd-apply`.
+`spec-apply`.
 
 ---
 
@@ -175,7 +175,7 @@ mobile screen renders against the running API.
 Report: what was scaffolded, where the example slice lives (list all files),
 and the verify results. Then stop — **do not implement further features.**
 Point the developer at:
-- Normal prompting or `sdd-apply` for the next feature, following the slice's
+- Normal prompting or `spec-apply` for the next feature, following the slice's
   pattern
 - `prd-to-github-backlog` if they want the remaining work turned into tracked
   issues first
@@ -188,9 +188,9 @@ Point the developer at:
   optional — this skill must not invent business rules or entity names.
 - **Exactly one vertical slice.** Not auth, not multiple entities, not every
   CRUD verb — one Command or Query, one endpoint, one screen. More features
-  is what `sdd-apply` and normal prompting are for afterward.
-- **No new dependencies without asking** — same rule as `sdd-apply`.
-- **Ponytail principles apply to Phase 3 code**, same as `sdd-apply`'s Apply
+  is what `spec-apply` and normal prompting are for afterward.
+- **No new dependencies without asking** — same rule as `spec-apply`.
+- **Ponytail principles apply to Phase 3 code**, same as `spec-apply`'s Apply
   phase — favor simplicity, reuse, and minimalism over premature structure.
 - **Two stop gates only:** Phase 0 entity confirmation, Phase 1 file list.
   Phase 2–4 run straight through once confirmed — this is a single-pass

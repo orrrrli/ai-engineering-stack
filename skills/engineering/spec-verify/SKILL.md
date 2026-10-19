@@ -1,5 +1,5 @@
 ---
-name: sdd-verify
+name: spec-verify
 stacks: [all]
 context: fork
 agent: code-reviewer
@@ -9,11 +9,11 @@ description: >
   code-quality spec, in a fresh code-reviewer subagent. Delivers PASS/FAIL per
   criterion with file:line evidence, after running the project's own tests.
   Report only: never fixes, never closes issues. Use after implementing a task,
-  when the user says "verify this", "does this match the spec", "sdd-verify",
-  and from sdd-apply Phase 4.
+  when the user says "verify this", "does this match the spec", "spec-verify",
+  and from spec-apply Phase 4.
 ---
 
-# SDD Verify
+# Spec Verify
 
 Verify `$ARGUMENTS` against its acceptance criteria. You start with no
 conversation history: everything you need is in this file, the repo, and GitHub.
