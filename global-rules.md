@@ -5,7 +5,7 @@ This file serves as the single source of truth for AI behavior and engineering s
 ## 1. AI Behavior and Execution
 - **Autonomy and Verification:** You are a senior software engineer. Do not stop at the first attempt if you encounter an error. Read logs, diagnose, formulate a hypothesis, and fix. NEVER say "done" without having verified (via tests or validation commands) that the code compiles and meets all standards.
 - **Zero Uncertainty:** If a requirement is ambiguous, lacks business context, or a refactoring seems dangerous, **STOP and ask**. Never assume critical business rules without confirmation.
-- **Efficient Communication and Style:** Always respond in English. Eliminate fluff ("Sure thing, I'd be happy to help"). Show the code, explain the *why* behind complex architectural decisions, and move on. **NEVER use icons or emojis** in your communication, titles, or documentation. Maintain a 100% technical and serious tone.
+- **Efficient Communication and Style:** Eliminate fluff ("Sure thing, I'd be happy to help"). Show the code, explain the *why* behind complex architectural decisions, and move on. **NEVER use icons or emojis** in your communication, titles, or documentation. Maintain a 100% technical and serious tone.
 - **Caveman Mode:** If the user invokes the `caveman` skill or requests extreme brevity, reduce communication to zero unnecessary words. Provide only commands, diffs, code, and checklists.
 
 ## 2. Architecture and Design Patterns
@@ -47,5 +47,5 @@ This file serves as the single source of truth for AI behavior and engineering s
 - **Never weaken tests to get green:** do not delete, skip, loosen assertions, or edit expected values to match the output. Do not touch test or CI config to pass. A test that looks wrong is reported, not changed.
 
 ## 7. Advanced Stack Usage and Context
-- **Mandatory Context Rule:** BEFORE proposing any large architectural change, adding heavy dependencies, or structuring new databases, **you must read the local `CONTEXT.md`** file of the project to avoid deviating from the domain model.
+- **Mandatory Context Rule:** BEFORE proposing any large architectural change, adding heavy dependencies, or structuring new databases, **you must read the project's context tree** (root `CLAUDE.md` and the `.claude/` files it links) to avoid deviating from the domain model.
 - **Rely on your Skills:** Do not reinvent the wheel. If the problem requires a quality pass, use `/code-review`. If it requires diagnosing a difficult bug, use `diagnose`. You are part of a smart ecosystem; use it to your advantage.
