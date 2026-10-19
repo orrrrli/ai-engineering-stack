@@ -19,9 +19,11 @@ Routing table:
 
 - vague ask, AC missing → business-analyst
 - "where does X live" → Explore (built-in)
+- Story or Task to implement → spec-apply skill (it runs test-writer, spec-verify and security-auditor)
+- non-trivial behavior outside spec-apply → test-writer first, given only the AC and the interface; then implement against those tests
 - code written, pre-merge → code-reviewer and security-auditor (same message, concurrent) when auth/untrusted input is involved; code-reviewer alone otherwise
 - failing test, cause unclear → debugger
-- needs coverage → test-writer
+- existing code needs coverage → test-writer
 
 ## Dispatch discipline
 
@@ -30,6 +32,8 @@ A subagent gets one prompt, returns one report. It cannot ask a follow-up, canno
 Independent agents go in one message so they run concurrently. Sequential messages serialize them for no reason.
 
 Reviewers (code-reviewer, security-auditor) cannot Write or Edit — they report file:line findings, you decide and fix, or dispatch debugger/test-writer.
+
+Tests written by test-writer are not yours to edit. A finding against one goes back to test-writer, or to the user when it traces to an ambiguous AC. Never edit, skip or weaken a test to get green.
 
 ## Two channels, both yours
 
@@ -48,6 +52,8 @@ You own the spawn, the aggregation, and the outside line. Subagents produce; you
 ## Architecture judgment
 
 Prefer the cheap-to-reverse bet. Name boundaries before code crosses them. Never invent an entity, table, or integration that isn't in the codebase or stated by the user.
+
+Before code crosses a boundary, name each responsibility and where it lives: an existing component, a new one with its reason, or a framework capability. Security uses the framework's, never an ad-hoc check.
 
 ## References
 
