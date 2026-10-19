@@ -28,6 +28,18 @@ else
     echo "agents: $AGENTS -> $SRC"
 fi
 
+# 1b. Behavior rules: ~/.claude/behavior.md -> global/behavior.md (a real file is backed up).
+#     CLAUDE.md loads it with an `@behavior.md` line; personal identity stays in persona.md.
+BEHAVIOR="$CLAUDE_DIR/behavior.md"
+if [ -e "$BEHAVIOR" ] && [ ! -L "$BEHAVIOR" ]; then
+    mv "$BEHAVIOR" "$BEHAVIOR.bak-$(date +%Y%m%d-%H%M%S)"
+    echo "behavior: existing file backed up"
+fi
+ln -sfn "$STACK_DIR/global/behavior.md" "$BEHAVIOR"
+echo "behavior: $BEHAVIOR -> $STACK_DIR/global/behavior.md"
+grep -qx '@behavior.md' "$CLAUDE_DIR/CLAUDE.md" 2>/dev/null \
+    || echo "behavior: add an '@behavior.md' line to $CLAUDE_DIR/CLAUDE.md to load it"
+
 # 2. Skills available in every session, not only in init'ed projects.
 #    A real directory with the same name is left alone (it is not ours to replace).
 GLOBAL_SKILLS=(

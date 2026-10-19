@@ -39,6 +39,7 @@ EOF
 heredoc CLAUDE.md "$(grep -vx '@RTK.md' "$CLAUDE_DIR/CLAUDE.md")"
 { grep -x '@[^ ]*\.md' "$CLAUDE_DIR/CLAUDE.md" || true; } | sed 's/^@//' | while read -r f; do
     [ "$f" = "RTK.md" ] && continue
+    [ "$f" = "behavior.md" ] && continue   # linked from the clone by install-global.sh
     [ -f "$CLAUDE_DIR/$f" ] || { echo "Missing $CLAUDE_DIR/$f (imported by CLAUDE.md)" >&2; exit 1; }
     heredoc "$f" "$(cat "$CLAUDE_DIR/$f")"
 done
