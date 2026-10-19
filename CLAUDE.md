@@ -11,6 +11,7 @@ global/agents/<name>.md             6-agent team, user-level (all projects)
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
 install-global.sh                   user-level setup, once per machine
+global/behavior.md                  how the agent writes and acts (no personal data), linked as ~/.claude/behavior.md by install-global.sh
 global/statusline-command.sh        statusline, linked by install-global.sh
 global/permissions.json             guardrail deny/ask rules, merged into ~/.claude/settings.json by install-global.sh
 global/build-cloud-setup.sh         prints the claude.ai/code environment setup script; output holds personal files, never commit it
