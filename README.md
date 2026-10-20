@@ -1,6 +1,6 @@
 # AI Engineering Stack
 
-A personal Claude Code harness: a 6-agent team, 19 skills and the scripts that
+A personal Claude Code harness: a 7-agent team, 19 skills and the scripts that
 wire them into any project. Clone it once, run one script per machine and one
 per project, and every Claude Code session works the same way, with the same
 rules, the same reviewers and the same delivery loop.
@@ -17,7 +17,8 @@ removed. Everything targets Claude Code's own conventions (`.claude/skills/`,
   │ agents/   -> global/agents/          │            │ .claude/skills/<name> -> skills/  │
   │ skills/   -> 7 everyday skills       │            │   (filtered by --stack)           │
   │ settings.json  agent: architect      │            │ CLAUDE.md + .claude/ context tree │
-  │ statusline-command.sh                │            │ core.hooksPath -> commit-msg hook │
+  │ statusline-command.sh                │            │ core.hooksPath -> githooks/       │
+  │                                      │            │   (commit-msg, post-checkout)     │
   └──────────────────────────────────────┘            └──────────────────────────────────┘
           install-global.sh                                   init-project.sh
 ```
@@ -52,9 +53,21 @@ Then open Claude Code in the project and run `/fill-context`.
 
 ### Agents
 
-Installed at user level by `install-global.sh` (`global/agents/`). The main
-session always runs as `software-architect`, which writes the feature code and
+Installed at user level by `install-global.sh` (`global/agents/`). By default
+the main session runs as `software-architect`, which writes the feature code and
 dispatches the rest as subagents: one prompt in, one report back.
+
+For visual work, `claude-design` starts a `ui-designer` session instead. It is a
+shell alias, kept outside this repo (for example in `~/.zshrc`):
+
+```bash
+alias claude-design="claude --agent ui-designer --settings '{\"enabledPlugins\":{\"ponytail@ponytail\":false}}'"
+```
+
+The alias turns the ponytail plugin off for that session only. Setting
+`PONYTAIL_DEFAULT_MODE=off` instead would delete the global
+`~/.claude/.ponytail-active` flag, and a code session running in parallel would
+lose ponytail in its subagents.
 
 | Agent | Role |
 |-------|------|
@@ -64,6 +77,7 @@ dispatches the rest as subagents: one prompt in, one report back.
 | **security-auditor** | Read-only. Critical/high issues on auth and untrusted input |
 | **debugger** | Root cause of a failing test or wrong behavior, minimal fix |
 | **test-writer** | Behavioral tests in the project's existing framework |
+| **ui-designer** | Main session for visual work (pen.dev, Figma, visual frontend). Never a subagent |
 
 ### Skills
 
@@ -319,6 +333,18 @@ ticket-first (`OG-4703: ...`). It is POSIX `sh` plus `grep -E`.
 - Not a git repo yet: init skips the hook. Run `git init`, then init again.
 - Undo in a repo: `git config --unset core.hooksPath`.
 
+### Worktree hook
+
+`core.hooksPath` points at the whole `global/githooks/` directory, so
+`global/githooks/post-checkout` runs too. It acts only on `git worktree add`
+(git passes an all-zero previous ref then). It symlinks the main checkout's
+ignored `CLAUDE.md`, `.claude`, `*/CLAUDE.md` and `docs/brain` into the new
+worktree, so every worktree shares one copy of the harness.
+
+- A `.claude/` ignore rule with a trailing slash does not match the symlink, so
+  git sees it as untracked. Write the rule as `.claude`, without the slash.
+- Delete the symlinks before `git worktree remove`.
+
 ### After init
 
 1. Open Claude Code in the project and run `/fill-context`. It scans the codebase,
@@ -447,7 +473,7 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | `global/build-cloud-setup.sh` | Prints the setup script for a claude.ai/code cloud environment |
 | `init-project.sh` | Project setup, `--stack` aware |
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
-| `global/agents/` | The 6-agent team |
+| `global/agents/` | The 7-agent team |
 | `global/githooks/commit-msg` | Commit message hook, referenced via `core.hooksPath` |
 | `global/claude-hooks/` | Optional Claude Code hooks, opt-in, referenced from settings |
 | `global-rules.md` | Global engineering standards |
