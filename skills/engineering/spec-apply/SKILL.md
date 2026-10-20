@@ -14,7 +14,7 @@ implement just that one task through the same phases. **Applies ponytail princip
 ## Execution model
 
 ```
-Phase 0  Resolve  → Story# + ordered list of its open Task sub-issues; set up the Story branch;
+Phase 0  Resolve  → Story# + ordered list of its open Task sub-issues; set up the Story worktree;
                     AC missing/untestable → business-analyst drafts them ⏸ STOP for approval
 FOR each Task (in dependency order):
     Phase 1  Explore   (no stop gate — report and continue)
@@ -57,7 +57,7 @@ Derivation rules:
 
 **Goal:** Turn whatever the user gave you (raw `#N`, a Story ID like `BE-AUTH-1`, a Task ID like
 `BE-AUTH-1-T1`, or "list my stories") into a concrete **Story issue number**, its **Epic number**,
-and the **ordered list of its open Task sub-issues**. Then set up the Story branch.
+and the **ordered list of its open Task sub-issues**. Then set up the Story worktree.
 
 Resolve via the **manifest as a cache, verified against the live board** (the chosen strategy):
 
@@ -99,12 +99,25 @@ Resolve via the **manifest as a cache, verified against the live board** (the ch
    manifest `base_branch` → repo default (`gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name'`)
    → `main`. Call it `<BASE>` and reuse it in Phase 6.
 
-7. **Set up the Story branch** — one branch for the whole Story, cut from `<BASE>`; every task
-   commits onto it:
+7. **Set up the Story worktree** — one worktree and one branch per Story, so parallel sessions
+   never share a working tree. Every task commits onto `feat/<STORY_ID>`. Never `git checkout` in
+   the current tree and never `cd`.
    ```bash
-   git checkout <BASE> && git pull
-   git checkout -b feat/<STORY_ID>   # e.g. feat/BE-AUTH-1  (reuse if it already exists)
+   git fetch origin <BASE>
+   main=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+   git branch --show-current
+   git worktree list --porcelain
    ```
+   - Current branch is `feat/<STORY_ID>` → you are in the Story worktree. `git pull --ff-only` if it
+     has an upstream, then continue.
+   - `feat/<STORY_ID>` is checked out in another worktree → **STOP**: "Open a session in `<path>` and
+     run `/spec-apply <STORY_ID>` there."
+   - Otherwise create it (the post-checkout hook links the local Claude harness into it):
+     ```bash
+     git worktree add -b feat/<STORY_ID> "$main-<STORY_ID>" origin/<BASE>   # new branch
+     git worktree add "$main-<STORY_ID>" feat/<STORY_ID>                     # branch already exists
+     ```
+     Then **STOP**: "Worktree ready at `<path>`. Open a session there and run `/spec-apply <STORY_ID>`."
 
 8. **Check the Story's acceptance criteria** — once per Story, since every task and `spec-verify`
    are judged against them:
@@ -126,10 +139,10 @@ Resolve via the **manifest as a cache, verified against the live board** (the ch
      ```
 
 **Single-task input:** if the user explicitly named one Task ID/number and asked for just that,
-set the task list to that one task (still on the Story branch).
+set the task list to that one task (still in the Story worktree).
 
 **Exit gate:** State the resolved `Story #<n> (<STORY_ID>)`, `Epic #<n> (<EPIC_ID>)`, the base branch
-`<BASE>`, the working branch `feat/<STORY_ID>`, and the **ordered task list** (`Task #<n> (<TASK_ID>)`
+`<BASE>`, the working branch `feat/<STORY_ID>` and its worktree path, and the **ordered task list** (`Task #<n> (<TASK_ID>)`
 each). If the input matched
 zero or many stories, list the candidates and ask which one. Then begin the per-task loop at Phase 1
 with the first task.
@@ -348,7 +361,8 @@ Rules:
    Do NOT add a Claude/AI co-author or generated-by trailer to the PR.
 
 3. Report done: the PR URL, the list of tasks committed/closed, and anything skipped or left for a
-   follow-up.
+   follow-up. Close with: "After merge, remove the worktree: delete its harness symlinks first,
+   then `git worktree remove <path>`."
 
 ---
 

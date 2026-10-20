@@ -7,7 +7,7 @@ them into a project. There is no application here — it is markdown and bash.
 
 ```
 skills/<category>/<name>/SKILL.md   19 skills across 3 categories
-global/agents/<name>.md             6-agent team, user-level (all projects)
+global/agents/<name>.md             7-agent team, user-level (all projects)
 init-project.sh                     project setup, --stack aware
 init-dotnet-project.sh              same, for .NET (defaults to --stack=dotnet)
 install-global.sh                   user-level setup, once per machine
@@ -16,6 +16,7 @@ global/statusline-command.sh        statusline, linked by install-global.sh
 global/permissions.json             guardrail deny/ask rules, merged into ~/.claude/settings.json by install-global.sh
 global/build-cloud-setup.sh         prints the claude.ai/code environment setup script; output holds personal files, never commit it
 global/githooks/commit-msg          commit message hook; repos point at it via core.hooksPath, never copied
+global/githooks/post-checkout       on `git worktree add`, symlinks the ignored Claude harness from the main checkout
 global/claude-hooks/<name>.sh       optional Claude Code hooks; settings point at them, never copied, nothing installs them
 global-rules.md                     engineering standards shipped to projects
 ```
@@ -24,8 +25,9 @@ Each skill is symlinked into a target project as `.claude/skills/<skill>` by the
 
 `global/agents/` is symlinked as `~/.claude/agents` by `install-global.sh`, which
 also sets `"agent": "software-architect"` in `~/.claude/settings.json`. That
-setting applies to every session, including folders never init'ed, so the
-architect must live at user level.
+setting is the default for every session, including folders never init'ed, so the
+architect must live at user level. `claude-design` (a shell alias for
+`claude --agent ui-designer`, see README) starts a ui-designer session instead.
 
 ## Commands
 
