@@ -48,6 +48,7 @@ GLOBAL_SKILLS=(
     engineering/prompt-rewrite
     engineering/spec-apply
     engineering/spec-verify
+    productivity/blind-pick
     productivity/grill-me
     productivity/handoff
 )

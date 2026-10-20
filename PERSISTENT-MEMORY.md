@@ -110,4 +110,4 @@ Resolve them there, since the reviewer has no `mem_judge`.
 
 | File | Purpose |
 |------|---------|
-| `global-rules.md` | Global rules including memory protocol |
+| `global/agents/*.md` | Per-agent memory rules (mem_search before work, mem_save after) |

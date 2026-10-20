@@ -15,9 +15,9 @@ removed. Everything targets Claude Code's own conventions (`.claude/skills/`,
   ~/.claude/  (global layer, once per machine)        your-project/  (per project)
   ┌──────────────────────────────────────┐            ┌──────────────────────────────────┐
   │ agents/   -> global/agents/          │            │ .claude/skills/<name> -> skills/  │
-  │ skills/   -> 7 everyday skills       │            │   (filtered by --stack)           │
+  │ skills/   -> 8 everyday skills       │            │   (filtered by --stack)           │
   │ settings.json  agent: architect      │            │ CLAUDE.md + .claude/ context tree │
-  │ statusline-command.sh                │            │ core.hooksPath -> githooks/       │
+  │ behavior.md, statusline-command.sh   │            │ core.hooksPath -> githooks/       │
   │                                      │            │   (commit-msg, post-checkout)     │
   └──────────────────────────────────────┘            └──────────────────────────────────┘
           install-global.sh                                   init-project.sh
@@ -95,11 +95,11 @@ The **Origin** column is detailed in [Credits and sources](#credits-and-sources)
 | **prompt-rewrite** | all | Audits a skill, agent or prompt against Anthropic's prompting docs | Adapted |
 | **tdd** | all | Red-green-refactor loop | mattpocock/skills |
 | **diagnose** | all | Reproduce, minimise, hypothesise, instrument, fix, regression-test | mattpocock/skills |
-| **improve-codebase-architecture** | all | Finds deepening opportunities using the .claude/ tree and engram; Artifact report | Adapted |
+| **improve-codebase-architecture** | all | Finds deepening opportunities using the .claude/ tree and engram; Artifact report | mattpocock/skills |
 | **audit-layer-boundaries** | web | Scans for the three violations that break the layer contract | Own |
 | **dotnet-clean-architecture** | dotnet | Scans a .NET Clean Architecture solution for dependency-rule violations | Own |
-| **android-clean-architecture** | android | Clean Architecture patterns and a layer scan for Android/KMP | Own |
-| **project-bootstrap** | dotnet, android | Skeleton plus one vertical slice end to end | Own |
+| **android-clean-architecture** | android | Clean Architecture patterns and a layer scan for Android/KMP | affaan-m/everything-claude-code |
+| **project-bootstrap** | dotnet | Skeleton plus one vertical slice end to end | Own |
 | **write-swift** | ios | Modern Swift: value types, Swift 6 concurrency, generics, Swift Testing | emilkowalski/skills |
 | **apple-design** | ios | Apple's rules for static iOS screens: materials, text styles, accessibility, the eight principles | Adapted |
 | **swiftui-motion** | ios | SwiftUI motion in decision order: gate, spring, interruption, drag handoff, haptics, Reduce Motion | Adapted |
@@ -146,17 +146,21 @@ phase. `tdd` stays a separate skill for test-first work outside a Story.
 
 - Symlinks `~/.claude/agents` to `global/agents/`.
   An existing `~/.claude/agents` directory is moved to `agents.bak-<timestamp>`.
+- Symlinks `~/.claude/behavior.md` to `global/behavior.md`. An existing file is
+  moved to `behavior.md.bak-<timestamp>`. Prints a hint when `~/.claude/CLAUDE.md`
+  has no `@behavior.md` line to load it.
 - Symlinks the skills every session needs into `~/.claude/skills`: fill-context,
-  prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, grill-me, handoff. Stale links
+  prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, blind-pick, grill-me, handoff. Stale links
   are replaced; a real directory with the same name is skipped.
 - Sets `"agent": "software-architect"` in `~/.claude/settings.json` with `jq`,
-  so every session runs as the architect. Other keys are left untouched.
+  so sessions run as the architect by default (`claude-design` overrides it). Other keys are left untouched.
 - Merges the guardrail rules from `global/permissions.json` into
   `permissions.deny`/`ask` (see Guardrails). Only adds the missing ones, after
   yours; never removes or reorders a rule.
 - Symlinks `~/.claude/statusline-command.sh` to `global/` (repo, branch, PR,
   running agent, model, context and rate limits; needs a Nerd Font) and sets
-  `statusLine` only when none is configured.
+  `statusLine` only when none is configured. A `refreshInterval` of `3000` is
+  rewritten to `3`, since the value is in seconds.
 - Prints the `claude mcp add` commands for context7 and GitHub. Run them by hand:
   the tokens live in `~/.claude.json` and never in this repo.
 - Checks engram and ego-browser and prints their install commands when missing.
@@ -304,12 +308,13 @@ script links only the matching ones. An Android project has no use for
 |-----------|--------|
 | `web`     | 13 |
 | `dotnet`  | 14 |
-| `android` | 14 |
+| `android` | 13 |
 | `ios`     | 15 |
 | `all`     | 19 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
-to `dotnet`.
+to `dotnet`. It also links the external repo `~/dev/oss/dotnet-clean-architecture-skills`
+into `.claude/commands/dotnet` and `.claude/recipes`, so clone it there first.
 
 ### Commit message hook
 
@@ -362,7 +367,8 @@ into this stack:
 | Committed | Ignored |
 |-----------|---------|
 | `CLAUDE.md` | `.claude/skills/<skill>` (one symlink per skill) |
-| `.claude/business/`, `architecture/`, `domains/`, `engineering/` | |
+| `.claude/business/`, `architecture/`, `domains/`, `engineering/` | `graphify-out/` |
+| | `.claude/commands/dotnet`, `.claude/recipes` (dotnet init only) |
 | `.claude/settings.json` | `.claude/settings.local.json` |
 
 > [!IMPORTANT]
@@ -443,6 +449,7 @@ structure; adapted ones say in their own file what changed and why.
 | [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `tdd`, `diagnose` (upstream now `diagnosing-bugs`), `improve-codebase-architecture` (resynced with commit `49dd158`, read 2026-10-17; reads the `.claude/` tree instead of CONTEXT.md, records rejections in engram instead of ADRs, reports as an Artifact), `grill-me`, and `global/claude-hooks/block-dangerous-git.sh` (from its `git-guardrails-claude-code` skill; the skill wrapper was dropped) |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `caveman`, copied in May 2026, before upstream moved to Apache-2.0 in 3.0.0. Its license ships in [skills/productivity/caveman/LICENSE](./skills/productivity/caveman/LICENSE). Only change: the `stacks:` field |
 | [emilkowalski/skills](https://github.com/emilkowalski/skills) | MIT | `write-swift`, commit `e8a175d`, read 2026-10-09. Its license ships in [skills/engineering/write-swift/LICENSE](./skills/engineering/write-swift/LICENSE). Only change: the `stacks:` field |
+| [affaan-m/everything-claude-code](https://github.com/affaan-m/everything-claude-code) | MIT | `android-clean-architecture`. Changes: added the `stacks:` field and the Process section, dropped references to skills we do not have |
 
 ### Inspiration and adapted rules
 
@@ -475,6 +482,7 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
 | `global/agents/` | The 7-agent team |
 | `global/githooks/commit-msg` | Commit message hook, referenced via `core.hooksPath` |
+| `global/githooks/post-checkout` | Links the local Claude harness into new worktrees, same `core.hooksPath` |
 | `global/claude-hooks/` | Optional Claude Code hooks, opt-in, referenced from settings |
-| `global-rules.md` | Global engineering standards |
+| `global/behavior.md` | How the agent writes and acts, linked as `~/.claude/behavior.md` by `install-global.sh` |
 | `PERSISTENT-MEMORY.md` | claude-mem + engram memory guide |
