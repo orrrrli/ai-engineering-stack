@@ -484,5 +484,5 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | `global/githooks/commit-msg` | Commit message hook, referenced via `core.hooksPath` |
 | `global/githooks/post-checkout` | Links the local Claude harness into new worktrees, same `core.hooksPath` |
 | `global/claude-hooks/` | Optional Claude Code hooks, opt-in, referenced from settings |
-| `global-rules.md` | Global engineering standards |
+| `global/behavior.md` | How the agent writes and acts, linked as `~/.claude/behavior.md` by `install-global.sh` |
 | `PERSISTENT-MEMORY.md` | claude-mem + engram memory guide |
