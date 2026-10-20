@@ -17,7 +17,7 @@ removed. Everything targets Claude Code's own conventions (`.claude/skills/`,
   │ agents/   -> global/agents/          │            │ .claude/skills/<name> -> skills/  │
   │ skills/   -> 7 everyday skills       │            │   (filtered by --stack)           │
   │ settings.json  agent: architect      │            │ CLAUDE.md + .claude/ context tree │
-  │ statusline-command.sh                │            │ core.hooksPath -> githooks/       │
+  │ behavior.md, statusline-command.sh   │            │ core.hooksPath -> githooks/       │
   │                                      │            │   (commit-msg, post-checkout)     │
   └──────────────────────────────────────┘            └──────────────────────────────────┘
           install-global.sh                                   init-project.sh
@@ -146,6 +146,9 @@ phase. `tdd` stays a separate skill for test-first work outside a Story.
 
 - Symlinks `~/.claude/agents` to `global/agents/`.
   An existing `~/.claude/agents` directory is moved to `agents.bak-<timestamp>`.
+- Symlinks `~/.claude/behavior.md` to `global/behavior.md`. An existing file is
+  moved to `behavior.md.bak-<timestamp>`. Prints a hint when `~/.claude/CLAUDE.md`
+  has no `@behavior.md` line to load it.
 - Symlinks the skills every session needs into `~/.claude/skills`: fill-context,
   prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, grill-me, handoff. Stale links
   are replaced; a real directory with the same name is skipped.
@@ -156,7 +159,8 @@ phase. `tdd` stays a separate skill for test-first work outside a Story.
   yours; never removes or reorders a rule.
 - Symlinks `~/.claude/statusline-command.sh` to `global/` (repo, branch, PR,
   running agent, model, context and rate limits; needs a Nerd Font) and sets
-  `statusLine` only when none is configured.
+  `statusLine` only when none is configured. A `refreshInterval` of `3000` is
+  rewritten to `3`, since the value is in seconds.
 - Prints the `claude mcp add` commands for context7 and GitHub. Run them by hand:
   the tokens live in `~/.claude.json` and never in this repo.
 - Checks engram and ego-browser and prints their install commands when missing.
@@ -309,7 +313,8 @@ script links only the matching ones. An Android project has no use for
 | `all`     | 19 |
 
 Omitting the flag installs everything (`all`); `init-dotnet-project.sh` defaults
-to `dotnet`.
+to `dotnet`. It also links the external repo `~/dev/oss/dotnet-clean-architecture-skills`
+into `.claude/commands/dotnet` and `.claude/recipes`, so clone it there first.
 
 ### Commit message hook
 
@@ -362,7 +367,8 @@ into this stack:
 | Committed | Ignored |
 |-----------|---------|
 | `CLAUDE.md` | `.claude/skills/<skill>` (one symlink per skill) |
-| `.claude/business/`, `architecture/`, `domains/`, `engineering/` | |
+| `.claude/business/`, `architecture/`, `domains/`, `engineering/` | `graphify-out/` |
+| | `.claude/commands/dotnet`, `.claude/recipes` (dotnet init only) |
 | `.claude/settings.json` | `.claude/settings.local.json` |
 
 > [!IMPORTANT]
