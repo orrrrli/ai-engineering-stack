@@ -1,0 +1,18 @@
+#!/bin/sh
+# On `git worktree add`, symlink the untracked Claude harness (CLAUDE.md, .claude/,
+# docs/brain) from the main checkout, so every worktree shares one copy.
+# Git passes an all-zero previous ref only when a worktree is created.
+[ "$1" = "0000000000000000000000000000000000000000" ] || exit 0
+
+main=$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")
+here=$(git rev-parse --show-toplevel)
+[ "$main" = "$here" ] && exit 0
+
+git -C "$main" ls-files --others --ignored --exclude-standard --directory |
+  sed 's#/$##' | grep -E '(^|/)(CLAUDE\.md|\.claude|docs/brain)$' |
+  while read -r p; do
+    [ -e "$here/$p" ] || [ -L "$here/$p" ] && continue
+    mkdir -p "$(dirname "$here/$p")"
+    ln -s "$main/$p" "$here/$p"
+  done
+exit 0
