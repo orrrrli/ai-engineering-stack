@@ -153,7 +153,7 @@ phase. `tdd` stays a separate skill for test-first work outside a Story.
   prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, grill-me, handoff. Stale links
   are replaced; a real directory with the same name is skipped.
 - Sets `"agent": "software-architect"` in `~/.claude/settings.json` with `jq`,
-  so every session runs as the architect. Other keys are left untouched.
+  so sessions run as the architect by default (`claude-design` overrides it). Other keys are left untouched.
 - Merges the guardrail rules from `global/permissions.json` into
   `permissions.deny`/`ask` (see Guardrails). Only adds the missing ones, after
   yours; never removes or reorders a rule.
@@ -482,6 +482,7 @@ and the `ponytail` plugin. See [Tooling](#tooling).
 | `init-dotnet-project.sh` | Same, for .NET Clean Architecture (defaults to `dotnet`) |
 | `global/agents/` | The 7-agent team |
 | `global/githooks/commit-msg` | Commit message hook, referenced via `core.hooksPath` |
+| `global/githooks/post-checkout` | Links the local Claude harness into new worktrees, same `core.hooksPath` |
 | `global/claude-hooks/` | Optional Claude Code hooks, opt-in, referenced from settings |
 | `global-rules.md` | Global engineering standards |
 | `PERSISTENT-MEMORY.md` | claude-mem + engram memory guide |
