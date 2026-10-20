@@ -15,7 +15,7 @@ removed. Everything targets Claude Code's own conventions (`.claude/skills/`,
   ~/.claude/  (global layer, once per machine)        your-project/  (per project)
   ┌──────────────────────────────────────┐            ┌──────────────────────────────────┐
   │ agents/   -> global/agents/          │            │ .claude/skills/<name> -> skills/  │
-  │ skills/   -> 7 everyday skills       │            │   (filtered by --stack)           │
+  │ skills/   -> 8 everyday skills       │            │   (filtered by --stack)           │
   │ settings.json  agent: architect      │            │ CLAUDE.md + .claude/ context tree │
   │ behavior.md, statusline-command.sh   │            │ core.hooksPath -> githooks/       │
   │                                      │            │   (commit-msg, post-checkout)     │
@@ -150,7 +150,7 @@ phase. `tdd` stays a separate skill for test-first work outside a Story.
   moved to `behavior.md.bak-<timestamp>`. Prints a hint when `~/.claude/CLAUDE.md`
   has no `@behavior.md` line to load it.
 - Symlinks the skills every session needs into `~/.claude/skills`: fill-context,
-  prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, grill-me, handoff. Stale links
+  prd-to-github-backlog, prompt-rewrite, spec-apply, spec-verify, blind-pick, grill-me, handoff. Stale links
   are replaced; a real directory with the same name is skipped.
 - Sets `"agent": "software-architect"` in `~/.claude/settings.json` with `jq`,
   so sessions run as the architect by default (`claude-design` overrides it). Other keys are left untouched.
