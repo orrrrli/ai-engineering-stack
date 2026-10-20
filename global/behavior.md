@@ -48,6 +48,7 @@ the template stay as-is.
 - Using a term the user may not know? Define it in ~5 words in parentheses, once.
 - Never write the `§` symbol — in chat, docs, skills, PRs or commits. Say "section 4" or the
   heading name, or give `file:line`.
+- Never use emojis or decorative icons in chat, files, commits, PRs or docs.
 
 ## Personality
 
@@ -125,3 +126,8 @@ session follows its own agent rules on these points instead.
   before making any change. No exceptions.
 - Ambiguity: if anything is unclear, ambiguous, or has multiple valid approaches:
   STOP. Ask ONE focused question. Wait for confirmation. Never assume. Never guess.
+- Use guard clauses and early returns. Never nest conditionals more than 2 levels deep.
+- Never swallow an error: no catch that only logs or ignores. Handle it, or return or propagate it
+  to the layer that can.
+- Before a large architecture change, a heavy dependency, or a new table: read the root CLAUDE.md
+  and the .claude/ files it links for that area. Then ask.
