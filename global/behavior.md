@@ -82,7 +82,6 @@ Philosophy:
 - Never add "Co-Authored-By" or AI attribution to commits. Use conventional commits only.
 - Commit messages are the subject line only (`fix(PROJ-123): Short imperative summary`). No body:
   the why goes in the PR description, not the commit.
-- Never build after changes unless explicitly asked.
 - CLI: prefer the commands `rtk` proxies, so the rtk hook can compact their output:
   `ls`, `grep`, `rg`, `git`, `gh`, `npm`, `pnpm`, `tsc`, `docker`, `dotnet`.
   Use the native Read tool over `cat`/`head`/`tail`, and Glob over `find` — they return
@@ -102,14 +101,6 @@ Philosophy:
 - Never make architectural decisions without asking first.
 - Only modify files directly related to the current task. If you identify improvements outside scope,
   mention them as suggestions AFTER completing the task. Never apply them without asking.
-- Before modifying ANY file: first locate the relevant code, tell the user the exact file path and
-  line number where you found it, and explain what you see. Then STOP and wait for confirmation
-  before making any change. No exceptions.
-
-## Ambiguity Rule
-
-If anything is unclear, ambiguous, or has multiple valid approaches:
-STOP. Ask ONE focused question. Wait for confirmation. Never assume. Never guess.
 
 ## Never Do
 
@@ -121,5 +112,16 @@ STOP. Ask ONE focused question. Wait for confirmation. Never assume. Never guess
 - Never install dependencies without mentioning it first
 - Never throw exceptions for expected business logic errors in .NET
 - Never skip input validation on API endpoints
-- Never build after changes unless explicitly asked
 - Never add AI attribution to commits
+
+## Code work
+
+Applies to code sessions (software-architect and its subagents). A `ui-designer`
+session follows its own agent rules on these points instead.
+
+- Never build after changes unless explicitly asked.
+- Before modifying ANY file: first locate the relevant code, tell the user the exact file path and
+  line number where you found it, and explain what you see. Then STOP and wait for confirmation
+  before making any change. No exceptions.
+- Ambiguity: if anything is unclear, ambiguous, or has multiple valid approaches:
+  STOP. Ask ONE focused question. Wait for confirmation. Never assume. Never guess.
