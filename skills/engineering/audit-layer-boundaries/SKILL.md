@@ -103,14 +103,14 @@ For each approved fix, follow the pattern exactly:
    - If yes: add the needed export to the existing repository file.
    - If no: create `repositories/<name>.repository.ts` with re-exports from infrastructure.
 2. Update the use-case import.
-3. Run `npm test` — confirm no regressions.
+3. Run `pnpm test` — confirm no regressions.
 
 **Pattern 2 fix steps:**
 1. Copy the function body from the imported repository into the importing one (inline it).
 2. If both repositories now duplicate a mapper or small utility, extract it to a `repositories/*.mapper.ts` file. Both import from there — that is NOT a cross-repository import.
 3. Remove all `from '@/repositories/*'` imports from the repository.
 4. Remove the exported functions from the source repository if nothing else imports them.
-5. Run `npm test` — confirm no regressions.
+5. Run `pnpm test` — confirm no regressions.
 
 **Pattern 3 fix steps:**
 1. Extract the data-reading part of the pre-check into a new method (e.g., `checkStockAvailability`).
@@ -118,7 +118,7 @@ For each approved fix, follow the pattern exactly:
 3. Implement the method in the repository — it returns the issues array, NOT throws.
 4. In the use-case, call `this.repo.checkStockAvailability(...)`, then evaluate the result, then throw if needed.
 5. Remove the pre-check and invariant validation from the repository method.
-6. Run `npm test` — confirm no regressions.
+6. Run `pnpm test` — confirm no regressions.
 
 ### 4. Commit
 
