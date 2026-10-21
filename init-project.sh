@@ -177,7 +177,18 @@ fi
 
 # 7. Setup Claude Code settings.json
 # Claude Code auto-loads the root CLAUDE.md natively — no hook needed for context
-if [ ! -f ".claude/settings.json" ]; then
+# Web projects use pnpm: the deny blocks npm/npx so the rule holds even when the model forgets it.
+if [ ! -f ".claude/settings.json" ] && [ "$STACK" = "web" ]; then
+    cat > ".claude/settings.json" <<'EOF'
+{
+  "permissions": {
+    "deny": ["Bash(npm *)", "Bash(npx *)"]
+  },
+  "hooks": {}
+}
+EOF
+    echo "OK: Created .claude/settings.json (npm/npx denied, use pnpm)"
+elif [ ! -f ".claude/settings.json" ]; then
     cat > ".claude/settings.json" <<'EOF'
 {
   "hooks": {}
@@ -193,6 +204,12 @@ fi
 # Both work, so the index goes in the root to keep a single instruction file
 # rather than two that drift apart. If a root CLAUDE.md already exists (e.g.
 # checked-in team instructions), leave it untouched: /fill-context merges into it.
+PM="npm"
+PM_RULE=""
+if [ "$STACK" = "web" ]; then
+    PM="pnpm"
+    PM_RULE="Always use pnpm, never npm or npx (\`pnpm dlx\` for one-off binaries)."
+fi
 if [ ! -f "CLAUDE.md" ]; then
     cat > "CLAUDE.md" <<EOF
 # $PROJECT_NAME — Claude Code Instructions
@@ -221,10 +238,11 @@ if [ ! -f "CLAUDE.md" ]; then
 ## Commands
 
 \`\`\`bash
-npm run dev          # Dev server
-npm run lint         # ESLint
-npm run test         # Unit tests
+$PM run dev          # Dev server
+$PM run lint         # ESLint
+$PM run test         # Unit tests
 \`\`\`
+$PM_RULE
 EOF
     echo "OK: Created CLAUDE.md"
 else
