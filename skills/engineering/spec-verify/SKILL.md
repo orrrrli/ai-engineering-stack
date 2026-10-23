@@ -23,7 +23,7 @@ conversation history: everything you need is in this file, the repo, and GitHub.
 `$ARGUMENTS` is one of:
 
 - **A path to a spec file**: read the acceptance criteria from it.
-- **A Task ID** (`BE-AUTH-1-T1`), **Story ID** (`BE-AUTH-1`) or **issue number** (`#42`),
+- **A Task ID** (`FS-AUTH-1-T1`), **Story ID** (`FS-AUTH-1`) or **issue number** (`#42`),
   from a backlog made by `prd-to-github-backlog`. Titles are `"<ID>: <title>"`;
   a Task's Story is its ID without the trailing `-T<k>`.
 
